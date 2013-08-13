@@ -18,7 +18,7 @@ The directive doesn't contain much information, because all of the information o
 
 Following is information on embedding videos, in particular an already existing AngularJS directive that may be reused:
 
-* Existing AngularJS directive to display YouTube, Vimeo videos: http://ngmodules.org/modules/ng-videosharing-embed
+* Existing AngularJS directive to display YouTube, Vimeo videos: [ng-videosharing-embed](http://ngmodules.org/modules/ng-videosharing-embed)
 
 ## Sample Resources
 
@@ -106,15 +106,13 @@ Where "description.markdown" is part of the model; a variable holding the Markdo
 
 The following projects may be the basis for this project.  I want to use PageDown.  The only question is which version of the library.
 
-* Markdown Editor implemented in JavaScript: https://code.google.com/p/pagedown/
+* Markdown Editor implemented in JavaScript: [PageDown project](https://code.google.com/p/pagedown/)
 
-* Fork of PageDown tailored for Bootstrap: https://github.com/samwillis/pagedown-bootstrap
-    * Demo of this editor: http://samwillis.co.uk/pagedown-bootstrap/demo/browser/demo.html
+* Fork of PageDown tailored for Bootstrap: [samwillis pagedown-bootstrap](https://github.com/samwillis/pagedown-bootstrap)
+    * Demo of this editor: [samwillis pagedown-bootstrap demo](http://samwillis.co.uk/pagedown-bootstrap/demo/browser/demo.html)
 
-* Fork of PageDown above tailored for Bootstrap and FontAwesome: https://github.com/tchapi/pagedown-bootstrap
+* Fork of PageDown above tailored for Bootstrap and FontAwesome: [tchapi pagedown-bootstrap](https://github.com/tchapi/pagedown-bootstrap)
     * This seems to be more active, and looks like the best option for library to use for the text editor directive.
 
-* http://programmieraffe.github.io/angular-editors/editors/pagedown-bootstrap/index.html
-
-* Project with example of AngularJS directives for PageDown editor: https://github.com/programmieraffe/angular-editors
+* Project with example of AngularJS directives for PageDown editor: [sample angular editors](https://github.com/programmieraffe/angular-editors)
     * I don't think this can be used as-is, but can be an example of how to create the text editor directive
