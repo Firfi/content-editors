@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('topicoContentEditorsApp')
-  .directive('topicoVideoEmbed', () ->
+  .directive('topicoVideoEmbed', ['topicoCESvc', (topicoCESvc) ->
     template: '<div></div>'
     restrict: 'E'
     link: (scope, element, attrs) ->
-      types = ['youtube', 'vimeo']
+      types = topicoCESvc.videoTypes
       res = attrs.res
       res = scope.$eval(res) if typeof res is 'string'
       console.warn "res is not defined for element: #{ element[0].nodeName }"; return unless res # TODO TESTS
@@ -23,4 +23,4 @@ angular.module('topicoContentEditorsApp')
       else
         element.text 'valid'
 
-  )
+  ])

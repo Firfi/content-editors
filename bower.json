@@ -15,5 +15,6 @@
   "main": ["topico-content-editors.js", "topico-content-editors.css"],
   "ignore": [
     "examples", "src"
-  ]
+  ],
+  "appPath": "src"
 }
