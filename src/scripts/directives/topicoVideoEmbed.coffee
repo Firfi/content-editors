@@ -2,25 +2,15 @@
 
 angular.module('topicoContentEditorsApp')
   .directive('topicoVideoEmbed', ['topicoCESvc', (topicoCESvc) ->
-    template: '<div></div>'
+    template: '<iframe width="{{ config.width }}" height="{{ config.height }}" src="{{ config.src }}" frameborder="0" allowfullscreen></iframe>'
     restrict: 'E'
     link: (scope, element, attrs) ->
       types = topicoCESvc.videoTypes
-      res = attrs.res
-      res = scope.$eval(res) if typeof res is 'string'
-      console.warn "res is not defined for element: #{ element[0].nodeName }"; return unless res # TODO TESTS
-      subType = res.subType
-      subType ?= (m[0] for t in types when m = res.url.match new RegExp(t, 'i'))[0]
-      subType = subType.toLowerCase()
-      validate = () ->
-        if not subType in types
-          "subtype is not valid. valid subtypes: #{ types }"
-        else
-          true
-      if err = validate() isnt true
+      res = topicoCESvc.res(scope, element, attrs)
+      if (err = types.validate(res.subType)) isnt true
         element.text ''
         console.warn err
       else
-        element.text 'valid'
+        scope.config = types.config(res)
 
   ])
