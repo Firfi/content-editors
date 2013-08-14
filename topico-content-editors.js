@@ -1,0 +1,5 @@
+/*! v0.0.0 */
+angular.module("topicoContentEditorsApp",[]);var __indexOf=[].indexOf||function(a){for(var b=0,c=this.length;c>b;b++)if(b in this&&this[b]===a)return b;return-1};angular.module("topicoContentEditorsApp").directive("topicoVideoEmbed",function(){return{template:"<div></div>",restrict:"E",link:function(a,b,c){var d,e,f,g,h,i,j;return i=["youtube","vimeo"],f=c.res,"string"==typeof f&&(f=a.$eval(f)),console.warn("res is not defined for element: "+b[0].nodeName),f?(g=f.subType,null==g&&(g=function(){var a,b,c;for(c=[],a=0,b=i.length;b>a;a++)h=i[a],(e=f.url.match(new RegExp(h,"i")))&&c.push(e[0]);return c}()[0]),g=g.toLowerCase(),j=function(){var a;return a=!g,__indexOf.call(i,a)>=0?"subtype is not valid. valid subtypes: "+i:!0},(d=j()!==!0)?(b.text(""),console.warn(d)):b.text("valid")):void 0}}});
+/*
+//@ sourceMappingURL=topico-content-editors.map
+*/
