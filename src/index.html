@@ -11,9 +11,10 @@
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        <!-- build:css({.tmp,app}) styles/main.css -->
+        <!-- build:css({.temp,src}) styles/main.css -->
         <link rel="stylesheet" href="styles/bootstrap.css">
         <link rel="stylesheet" href="styles/topico-content-editors.css">
+        <link rel="stylesheet" href="bower_components/pagedown-bootstrap/css/Markdown.Editor.css">
         <!-- endbuild -->
 </head>
   <body ng-app="topicoContentEditorsApp">
@@ -46,9 +47,15 @@
         <script src="bower_components/bootstrap-sass/js/bootstrap-scrollspy.js"></script>
         <script src="bower_components/bootstrap-sass/js/bootstrap-collapse.js"></script>
         <script src="bower_components/bootstrap-sass/js/bootstrap-tab.js"></script>
+        <script src="bower_components/pagedown-bootstrap/Markdown.Converter.js"></script>
+        <script src="bower_components/pagedown-bootstrap/Markdown.Editor.js"></script>
+        <script src="bower_components/pagedown-bootstrap/Markdown.Sanitizer.js"></script>
+
         <!-- endbuild -->
 
-        <!-- build:js({.tmp,app}) scripts/scripts.js -->
+
+
+        <!-- build:js({.temp,src}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/directives/topicoVideoEmbed.js"></script>

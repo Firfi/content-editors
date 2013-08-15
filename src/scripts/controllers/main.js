@@ -26,5 +26,9 @@ angular.module('topicoContentEditorsApp')
         }
       ]
     };
+    $scope.description = {
+      markdown: "markdown",
+      html: "html"
+    }
 
   });

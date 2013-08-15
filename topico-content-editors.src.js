@@ -4,15 +4,70 @@ angular.module('topicoContentEditorsApp', []);
 //@ sourceMappingURL=init.js.map
 */
 'use strict';
+angular.module('topicoContentEditorsApp').directive('topicoEditor', [
+  'topicoCEEditorSvc', '$compile', function(topicoCEEditorSvc, $compile) {
+    var nextId;
+    nextId = 0;
+    return {
+      template: '<div class="pagedown-bootstrap-editor"></div>',
+      replace: true,
+      restrict: 'E',
+      scope: {
+        markdown: '=',
+        html: '='
+      },
+      link: function(scope, element, attrs) {
+        var $wmdInput, converter, editor, editorUniqueId, help, isPreviewRefresh, newElement;
+        editorUniqueId = nextId++;
+        newElement = $compile('<div>' + '<div class="wmd-panel">' + '<div id="wmd-button-bar-' + editorUniqueId + '"></div>' + '<textarea class="wmd-input" id="wmd-input-' + editorUniqueId + '">' + '</textarea>' + '</div>' + '<div id="wmd-preview-' + editorUniqueId + '" class="wmd-panel wmd-preview"></div>' + '</div>')(scope);
+        element.html(newElement);
+        converter = new Markdown.Converter();
+        help = function() {
+          return alert("help?");
+        };
+        editor = new Markdown.Editor(converter, "-" + editorUniqueId, {
+          handler: help
+        });
+        editor.run();
+        isPreviewRefresh = false;
+        converter.hooks.chain("preConversion", function(markdown) {
+          scope.markdown = markdown;
+          return markdown;
+        });
+        converter.hooks.chain("postConversion", function(html) {
+          scope.html = html;
+          return html;
+        });
+        editor.hooks.chain("onPreviewRefresh", function() {
+          if (!isPreviewRefresh) {
+            return scope.$apply();
+          }
+        });
+        $wmdInput = $("#wmd-input-" + editorUniqueId);
+        return scope.$watch('markdown', function(value, oldValue) {
+          $wmdInput.val(value);
+          isPreviewRefresh = true;
+          editor.refreshPreview();
+          return isPreviewRefresh = false;
+        });
+      }
+    };
+  }
+]);
+
+/*
+//@ sourceMappingURL=topicoEditor.js.map
+*/
+'use strict';
 angular.module('topicoContentEditorsApp').directive('topicoVideoEmbed', [
-  'topicoCESvc', function(topicoCESvc) {
+  'topicoCEVideoSvc', function(topicoCEVideoSvc) {
     return {
       template: '<iframe width="{{ config.width }}" height="{{ config.height }}" src="{{ config.src }}" frameborder="0" allowfullscreen></iframe>',
       restrict: 'E',
       link: function(scope, element, attrs) {
         var err, res, types;
-        types = topicoCESvc.videoTypes;
-        res = topicoCESvc.res(scope, element, attrs);
+        types = topicoCEVideoSvc.videoTypes;
+        res = topicoCEVideoSvc.res(scope, element, attrs);
         if ((err = types.validate(res.subType)) !== true) {
           element.text('');
           return console.warn(err);
@@ -28,85 +83,30 @@ angular.module('topicoContentEditorsApp').directive('topicoVideoEmbed', [
 //@ sourceMappingURL=topicoVideoEmbed.js.map
 */
 'use strict';
+angular.module('topicoContentEditorsApp').service('topicoCEEditorSvc', function() {});
+
+/*
+//@ sourceMappingURL=topicoCEEditorSvc.js.map
+*/
+'use strict';
 var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 angular.module('topicoContentEditorsApp').service('topicoCESvc', function() {
-  var sub, validate, videoTypes;
-  validate = function(subType, types) {
-    var e;
-    subType = (function() {
-      try {
-        return subType.toLowerCase();
-      } catch (_error) {
-        e = _error;
-        return null;
-      }
-    })();
-    if (__indexOf.call(types, subType) < 0) {
-      return "subtype " + subType + " is not valid. valid subtypes: " + types;
-    } else {
-      return true;
-    }
-  };
-  sub = function(res) {
-    var e, m, subType, t;
-    subType = res.subType;
-    if (subType == null) {
-      subType = ((function() {
-        var _i, _len, _results;
-        _results = [];
-        for (_i = 0, _len = videoTypes.length; _i < _len; _i++) {
-          t = videoTypes[_i];
-          if (m = res.url.match(new RegExp(t, 'i'))) {
-            _results.push(m[0]);
-          }
-        }
-        return _results;
-      })())[0];
-    }
-    try {
-      return subType.toLowerCase();
-    } catch (_error) {
-      e = _error;
-      return 'youtube';
-    }
-  };
-  videoTypes = ['youtube', 'vimeo'];
   return {
-    res: function(scope, element, attrs) {
-      var res;
-      res = attrs.res;
-      if (typeof res === 'string') {
-        res = scope.$eval(res);
-      }
-      if (!res) {
-        console.warn("res is not defined for element: " + element[0].nodeName);
-      }
-      return res;
-    },
-    videoTypes: {
-      list: videoTypes,
-      validate: function(subType) {
-        return validate(subType, videoTypes);
-      },
-      subType: sub,
-      config: function(res) {
-        var getUrl, url, _ref;
-        getUrl = function() {
-          var embed;
-          embed = {
-            youtube: 'embed',
-            vimeo: 'video'
-          }[sub(res)];
-          return "" + location.protocol + "//" + (sub(res)) + ".com/" + embed + "/" + res.sourceId;
-        };
-        url = (_ref = res.url) != null ? _ref : getUrl();
-        url = url.replace(/watch\?v=/, 'embed/');
-        return {
-          src: url,
-          width: res.width,
-          height: res.height
-        };
+    validate: function(subType, types) {
+      var e;
+      subType = (function() {
+        try {
+          return subType.toLowerCase();
+        } catch (_error) {
+          e = _error;
+          return null;
+        }
+      })();
+      if (__indexOf.call(types, subType) < 0) {
+        return "subtype " + subType + " is not valid. valid subtypes: " + types;
+      } else {
+        return true;
       }
     }
   };
@@ -114,4 +114,74 @@ angular.module('topicoContentEditorsApp').service('topicoCESvc', function() {
 
 /*
 //@ sourceMappingURL=topicoCESvc.js.map
+*/
+'use strict';
+angular.module('topicoContentEditorsApp').service('topicoCEVideoSvc', [
+  'topicoCESvc', function(topicoCESvc) {
+    return {
+      res: function(scope, element, attrs) {
+        var res;
+        res = attrs.res;
+        if (typeof res === 'string') {
+          res = scope.$eval(res);
+        }
+        if (!res) {
+          console.warn("res is not defined for element: " + element[0].nodeName);
+        }
+        return res;
+      },
+      videoTypes: {
+        list: ['youtube', 'vimeo'],
+        validate: function(subType) {
+          return topicoCESvc.validate(subType, this.list);
+        },
+        subType: function(res) {
+          var e, m, subType, t;
+          subType = res.subType;
+          if (subType == null) {
+            subType = ((function() {
+              var _i, _len, _ref, _results;
+              _ref = this.list;
+              _results = [];
+              for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                t = _ref[_i];
+                if (m = res.url.match(new RegExp(t, 'i'))) {
+                  _results.push(m[0]);
+                }
+              }
+              return _results;
+            }).call(this))[0];
+          }
+          try {
+            return subType.toLowerCase();
+          } catch (_error) {
+            e = _error;
+            return 'youtube';
+          }
+        },
+        config: function(res) {
+          var getUrl, url, _ref;
+          getUrl = function() {
+            var embed;
+            embed = {
+              youtube: 'embed',
+              vimeo: 'video'
+            }[sub(res)];
+            return "" + location.protocol + "//" + (sub(res)) + ".com/" + embed + "/" + res.sourceId;
+          };
+          url = (_ref = res.url) != null ? _ref : getUrl();
+          url = url.replace(/watch\?v=/, 'embed/');
+          return {
+            src: url,
+            width: res.width,
+            height: res.height
+          };
+        }
+      }
+    };
+  }
+]);
+
+/*
+//@ sourceMappingURL=topicoCEVideoSvc.js.map
 */

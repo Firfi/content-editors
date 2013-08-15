@@ -12,7 +12,7 @@ module.exports = (grunt) ->
 
   yeomanConfig =
     app: 'src'
-    dev: 'dev'
+    dist: '.temp'
 
   try
     yeomanConfig.app = require('./bower.json').appPath || yeomanConfig.app
@@ -81,9 +81,45 @@ module.exports = (grunt) ->
     copy:
       styles:
         files: [
-          src: './src/styles/main.css'
+          src: "./#{yeomanConfig.app}/styles/main.css"
           dest: './topico-content-editors.css'
         ]
+      imgsDev:
+        files: [
+          flatten: true
+          expand: true
+          src: "./#{yeomanConfig.app}/bower_components/pagedown-bootstrap/img/*"
+          dest: "./#{yeomanConfig.app}/img/"
+          filter: 'isFile'
+        ]
+      imgs:
+        files: [
+          flatten: true
+          expand: true
+          src: "./#{yeomanConfig.app}/img/*"
+          dest: "./img/"
+        ]
+      plugins:
+        files: [
+          src: "./.temp/scripts/plugins.js"
+          dest: "./topico-content-editors-plugins.js"
+        ]
+      pluginsSrc:
+        files: [
+          src: "./.temp/scripts/plugins.js"
+          dest: "./topico-content-editors-plugins.src.js"
+        ]
+
+    useminPrepare:
+      html: '<%= yeoman.app %>/index.html',
+      options:
+        dest: '<%= yeoman.dist %>'
+
+    usemin:
+      html: ['<%= yeoman.dist %>/{,*/}*.html'],
+      css: ['<%= yeoman.dist %>/styles/{,*/}*.css'],
+      options:
+        dirs: ['<%= yeoman.dist %>']
 
   # Compile CoffeeScript (.coffee) files to JavaScript (.js).
     coffee:
@@ -127,8 +163,10 @@ module.exports = (grunt) ->
 
     cssmin:
       css:
+        expand: true
         files:
-          'topico-content-editors.css': 'topico-content-editors.css'
+          'topico-content-editors.css': ['topico-content-editors.css',
+                                         "#{yeomanConfig.app}/bower_components/pagedown-bootstrap/css/*"]
         options:
           banner: '<%= banner %>'
 
@@ -189,11 +227,17 @@ module.exports = (grunt) ->
     #'ngTemplateCache'
     'concat'
     #'less'
-    'copy'
+    'copy:styles'
+    'copy:imgsDev'
+    'copy:imgs'
+    'copy:pluginsSrc'
   ]
 
   grunt.registerTask 'default', [
+    'useminPrepare'
     'dev'
     'uglify'
+    'copy:plugins'
     'cssmin'
+    'usemin'
   ]
