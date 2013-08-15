@@ -1,10 +1,10 @@
-angular.module('topicoContentEditorsApp', []);
+angular.module('topicoContentEditors', []);
 
 /*
 //@ sourceMappingURL=init.js.map
 */
 'use strict';
-angular.module('topicoContentEditorsApp').directive('topicoEditor', [
+angular.module('topicoContentEditors').directive('topicoEditor', [
   'topicoCEEditorSvc', '$compile', function(topicoCEEditorSvc, $compile) {
     var nextId;
     nextId = 0;
@@ -59,7 +59,7 @@ angular.module('topicoContentEditorsApp').directive('topicoEditor', [
 //@ sourceMappingURL=topicoEditor.js.map
 */
 'use strict';
-angular.module('topicoContentEditorsApp').directive('topicoVideoEmbed', [
+angular.module('topicoContentEditors').directive('topicoVideoEmbed', [
   'topicoCEVideoSvc', function(topicoCEVideoSvc) {
     return {
       template: '<iframe width="{{ config.width }}" height="{{ config.height }}" src="{{ config.src }}" frameborder="0" allowfullscreen></iframe>',
@@ -83,7 +83,7 @@ angular.module('topicoContentEditorsApp').directive('topicoVideoEmbed', [
 //@ sourceMappingURL=topicoVideoEmbed.js.map
 */
 'use strict';
-angular.module('topicoContentEditorsApp').service('topicoCEEditorSvc', function() {});
+angular.module('topicoContentEditors').service('topicoCEEditorSvc', function() {});
 
 /*
 //@ sourceMappingURL=topicoCEEditorSvc.js.map
@@ -91,7 +91,7 @@ angular.module('topicoContentEditorsApp').service('topicoCEEditorSvc', function(
 'use strict';
 var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-angular.module('topicoContentEditorsApp').service('topicoCESvc', function() {
+angular.module('topicoContentEditors').service('topicoCESvc', function() {
   return {
     validate: function(subType, types) {
       var e;
@@ -116,7 +116,7 @@ angular.module('topicoContentEditorsApp').service('topicoCESvc', function() {
 //@ sourceMappingURL=topicoCESvc.js.map
 */
 'use strict';
-angular.module('topicoContentEditorsApp').service('topicoCEVideoSvc', [
+angular.module('topicoContentEditors').service('topicoCEVideoSvc', [
   'topicoCESvc', function(topicoCESvc) {
     return {
       res: function(scope, element, attrs) {

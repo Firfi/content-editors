@@ -3,7 +3,7 @@
 # this service supposed to be private
 # there is hight possibility of duplicate code in directives so we could put it here
 
-angular.module('topicoContentEditorsApp')
+angular.module('topicoContentEditors')
   .service 'topicoCEVideoSvc', ['topicoCESvc', (topicoCESvc) ->
     res: (scope, element, attrs) ->
       res = attrs.res

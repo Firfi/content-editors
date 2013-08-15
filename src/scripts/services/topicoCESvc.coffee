@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('topicoContentEditorsApp')
+angular.module('topicoContentEditors')
   .service 'topicoCESvc', () ->
     validate: (subType, types) ->
       subType = try subType.toLowerCase() catch e then null

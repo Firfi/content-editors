@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('topicoContentEditorsApp', [])
+angular.module('topicoContentEditors', [])
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {

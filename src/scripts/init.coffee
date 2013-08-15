@@ -1,1 +1,1 @@
-angular.module('topicoContentEditorsApp', []);
+angular.module('topicoContentEditors', []);

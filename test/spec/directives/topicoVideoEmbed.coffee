@@ -1,7 +1,7 @@
 'use strict'
 
 describe 'Directive: topicoVideoEmbed', () ->
-  beforeEach module 'topicoContentEditorsApp'
+  beforeEach module 'topicoContentEditors'
 
   element = {}
 

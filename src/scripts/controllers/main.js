@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('topicoContentEditorsApp')
+angular.module('topicoContentEditors')
   .controller('MainCtrl', function ($scope) {
     $scope.awesomeThings = [
       'HTML5 Boilerplate',

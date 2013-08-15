@@ -3,7 +3,7 @@
 describe 'Service: topicoCEEditorSvc', () ->
 
   # load the service's module
-  beforeEach module 'topicoContentEditorsApp'
+  beforeEach module 'topicoContentEditors'
 
   # instantiate service
   topicoCEEditorSvc = {}

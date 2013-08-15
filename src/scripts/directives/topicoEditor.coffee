@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('topicoContentEditorsApp')
+angular.module('topicoContentEditors')
   .directive('topicoEditor', ['topicoCEEditorSvc', '$compile', (topicoCEEditorSvc, $compile) ->
 
     nextId = 0;

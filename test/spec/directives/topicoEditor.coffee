@@ -1,7 +1,7 @@
 'use strict'
 
 describe 'Directive: topicoEditor', () ->
-  beforeEach module 'topicoContentEditorsApp'
+  beforeEach module 'topicoContentEditors'
 
   element = {}
 

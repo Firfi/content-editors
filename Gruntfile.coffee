@@ -81,8 +81,8 @@ module.exports = (grunt) ->
     copy:
       styles:
         files: [
-          src: "./#{yeomanConfig.app}/styles/main.css"
-          dest: './topico-content-editors.css'
+          src: "./.temp/styles/main.css"
+          dest: './css/topico-content-editors.css'
         ]
       imgsDev:
         files: [
@@ -165,8 +165,7 @@ module.exports = (grunt) ->
       css:
         expand: true
         files:
-          'topico-content-editors.css': ['topico-content-editors.css',
-                                         "#{yeomanConfig.app}/bower_components/pagedown-bootstrap/css/*"]
+          'topico-content-editors.css': ['topico-content-editors.css']
         options:
           banner: '<%= banner %>'
 
@@ -227,7 +226,6 @@ module.exports = (grunt) ->
     #'ngTemplateCache'
     'concat'
     #'less'
-    'copy:styles'
     'copy:imgsDev'
     'copy:imgs'
     'copy:pluginsSrc'
@@ -240,4 +238,5 @@ module.exports = (grunt) ->
     'copy:plugins'
     'cssmin'
     'usemin'
+    'copy:styles'
   ]
