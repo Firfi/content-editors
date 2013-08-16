@@ -16,6 +16,6 @@
   },
   "main": ["topico-content-editors.js", "topico-content-editors.css"],
   "ignore": [
-    "examples", "src"
+    "examples", "src", "topico-content-editors-f5dd"
   ]
 }
