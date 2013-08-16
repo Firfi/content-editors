@@ -1,8 +1,9 @@
 node_modules
-dist
+/dist
 .temp
 .sass-cache
 src/bower_components
+dist/bower_components
 .idea
 topico-content-editors.iml
 plugins.js
