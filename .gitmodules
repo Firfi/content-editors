@@ -1,0 +1,3 @@
+[submodule "site"]
+	path = site
+	url = git@bitbucket.org:Firfi/firfi.bitbucket.org.git
