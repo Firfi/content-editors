@@ -4,7 +4,7 @@ path = require("path")
 app = express()
 
 app.use express.logger()
-app.use express.static(path.join(__dirname, "dist"))
+app.use express.static(path.join(__dirname, "topico-content-editors-f5dd/app"))
 
 port = process.env.PORT or 5000
 app.listen port, ->
