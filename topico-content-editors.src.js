@@ -5,11 +5,11 @@ angular.module('topicoContentEditors', []);
 */
 'use strict';
 angular.module('topicoContentEditors').directive('topicoEditor', [
-  'topicoCEEditorSvc', '$compile', function(topicoCEEditorSvc, $compile) {
+  'topicoCEEditorSvc', '$compile', '$timeout', function(topicoCEEditorSvc, $compile, $timeout) {
     var nextId;
     nextId = 0;
     return {
-      template: '<div class="pagedown-bootstrap-editor"></div>',
+      template: '<div class="pagedown-bootstrap-editor">\n <div>\n   <div class="wmd-panel-{{ editorUniqueId }}">\n     <div id="wmd-button-bar-{{ editorUniqueId }}">\n       <textarea class="wmd-input" id="wmd-input-{{ editorUniqueId }}"></textarea>\n     </div>\n     <div id="wmd-preview-{{ editorUniqueId }}" class="wmd-panel wmd-preview"></div>\n   </div>\n </div>\n</div>',
       replace: true,
       restrict: 'E',
       scope: {
@@ -17,38 +17,38 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
         html: '='
       },
       link: function(scope, element, attrs) {
-        var $wmdInput, converter, editor, editorUniqueId, help, isPreviewRefresh, newElement;
-        editorUniqueId = nextId++;
-        newElement = $compile('<div>' + '<div class="wmd-panel">' + '<div id="wmd-button-bar-' + editorUniqueId + '"></div>' + '<textarea class="wmd-input" id="wmd-input-' + editorUniqueId + '">' + '</textarea>' + '</div>' + '<div id="wmd-preview-' + editorUniqueId + '" class="wmd-panel wmd-preview"></div>' + '</div>')(scope);
-        element.html(newElement);
-        converter = new Markdown.Converter();
-        help = function() {
-          return alert("help?");
-        };
-        editor = new Markdown.Editor(converter, "-" + editorUniqueId, {
-          handler: help
-        });
-        editor.run();
-        isPreviewRefresh = false;
-        converter.hooks.chain("preConversion", function(markdown) {
-          scope.markdown = markdown;
-          return markdown;
-        });
-        converter.hooks.chain("postConversion", function(html) {
-          scope.html = html;
-          return html;
-        });
-        editor.hooks.chain("onPreviewRefresh", function() {
-          if (!isPreviewRefresh) {
-            return scope.$apply();
-          }
-        });
-        $wmdInput = $("#wmd-input-" + editorUniqueId);
-        return scope.$watch('markdown', function(value, oldValue) {
-          $wmdInput.val(value);
-          isPreviewRefresh = true;
-          editor.refreshPreview();
-          return isPreviewRefresh = false;
+        scope.editorUniqueId = nextId++;
+        return $timeout(function() {
+          var $wmdInput, converter, editor, help, isPreviewRefresh;
+          converter = new Markdown.Converter();
+          help = function() {
+            return alert("Topico markdown editor");
+          };
+          editor = new Markdown.Editor(converter, "-" + scope.editorUniqueId, {
+            handler: help
+          });
+          editor.run();
+          isPreviewRefresh = false;
+          converter.hooks.chain("preConversion", function(markdown) {
+            scope.markdown = markdown;
+            return markdown;
+          });
+          converter.hooks.chain("postConversion", function(html) {
+            scope.html = html;
+            return html;
+          });
+          editor.hooks.chain("onPreviewRefresh", function() {
+            if (!isPreviewRefresh) {
+              return scope.$apply();
+            }
+          });
+          $wmdInput = $("#wmd-input-" + scope.editorUniqueId);
+          return scope.$watch('markdown', function(value, oldValue) {
+            $wmdInput.val(value);
+            isPreviewRefresh = true;
+            editor.refreshPreview();
+            return isPreviewRefresh = false;
+          });
         });
       }
     };
@@ -64,6 +64,7 @@ angular.module('topicoContentEditors').directive('topicoVideoEmbed', [
     return {
       template: '<iframe width="{{ config.width }}" height="{{ config.height }}" src="{{ config.src }}" frameborder="0" allowfullscreen></iframe>',
       restrict: 'E',
+      replace: true,
       link: function(scope, element, attrs) {
         var err, res, types;
         types = topicoCEVideoSvc.videoTypes;
@@ -138,8 +139,8 @@ angular.module('topicoContentEditors').service('topicoCEVideoSvc', [
         subType: function(res) {
           var e, m, subType, t;
           subType = res.subType;
-          if (subType == null) {
-            subType = ((function() {
+          try {
+            return (subType = ((function() {
               var _i, _len, _ref, _results;
               _ref = this.list;
               _results = [];
@@ -150,10 +151,7 @@ angular.module('topicoContentEditors').service('topicoCEVideoSvc', [
                 }
               }
               return _results;
-            }).call(this))[0];
-          }
-          try {
-            return subType.toLowerCase();
+            }).call(this))[0]).toLowerCase();
           } catch (_error) {
             e = _error;
             return 'youtube';

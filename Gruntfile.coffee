@@ -126,7 +126,7 @@ module.exports = (grunt) ->
       scripts:
         files: [
           cwd: './src/'
-          src: 'scripts/**/*.coffee'
+          src: ['scripts/**/*.coffee', 'scripts/init.coffee']
           dest: './.temp/'
           expand: true
           ext: '.js'
@@ -213,7 +213,6 @@ module.exports = (grunt) ->
       ]
 
   grunt.registerTask 'test', [
-    'clean:server'
     'coffee:test'
     'connect:test'
     'karma'

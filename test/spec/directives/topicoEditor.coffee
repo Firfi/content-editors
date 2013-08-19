@@ -6,6 +6,8 @@ describe 'Directive: topicoEditor', () ->
   element = {}
 
   it 'should make hidden element visible', inject ($rootScope, $compile) ->
-    element = angular.element '<topico-editor></topico-editor>'
+    $rootScope.markdown = '1'
+    $rootScope.html = '2'
+    element = angular.element '<topico-editor markdown="markdown" html="html"></topico-editor>'
     element = $compile(element) $rootScope
     expect(element.text()).toBe 'this is the topicoEditor directive'

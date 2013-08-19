@@ -1,65 +1,66 @@
 'use strict';
 
 angular.module('topicoContentEditors')
-  .directive('topicoEditor', ['topicoCEEditorSvc', '$compile', (topicoCEEditorSvc, $compile) ->
+  .directive('topicoEditor', ['topicoCEEditorSvc', '$compile', '$timeout', (topicoCEEditorSvc, $compile, $timeout) ->
 
     nextId = 0;
 
-    template:'<div class="pagedown-bootstrap-editor"></div>'
+    template: '''<div class="pagedown-bootstrap-editor">
+              <div>
+                <div class="wmd-panel-{{ editorUniqueId }}">
+                  <div id="wmd-button-bar-{{ editorUniqueId }}">
+                    <textarea class="wmd-input" id="wmd-input-{{ editorUniqueId }}"></textarea>
+                  </div>
+                  <div id="wmd-preview-{{ editorUniqueId }}" class="wmd-panel wmd-preview"></div>
+                </div>
+              </div>
+             </div>'''
     replace: true
     restrict: 'E'
     scope:
       markdown: '='
       html: '='
     link: (scope, element, attrs) ->
-      editorUniqueId = nextId++
+      scope.editorUniqueId = nextId++
 
-      newElement = $compile('<div>'+
-      '<div class="wmd-panel">'+
-      '<div id="wmd-button-bar-'+editorUniqueId+'"></div>'+
-      '<textarea class="wmd-input" id="wmd-input-'+editorUniqueId+'">'+
-      '</textarea>'+
-      '</div>'+
-      '<div id="wmd-preview-'+editorUniqueId+'" class="wmd-panel wmd-preview"></div>'+
-      '</div>')(scope)
+      # works that way with dom manipulation inside link function in tests
+      $timeout () ->
 
-      element.html(newElement)
+        converter = new Markdown.Converter()
 
-      converter = new Markdown.Converter()
+        help = ->
+          alert("Topico markdown editor")
 
-      help = ->
-        alert("help?")
+        editor = new Markdown.Editor(converter, "-"+scope.editorUniqueId, handler: help)
 
-      editor = new Markdown.Editor(converter, "-"+editorUniqueId, handler: help)
+        editor.run();
 
-      editor.run();
+        # better keep hooks after editor.run()
 
-      # better keep hooks after editor.run()
-
-      isPreviewRefresh = false
-
-      converter.hooks.chain("preConversion", (markdown) ->
-        scope.markdown = markdown
-        markdown
-      )
-
-      converter.hooks.chain("postConversion", (html) ->
-        scope.html = html
-        html
-      )
-
-      editor.hooks.chain("onPreviewRefresh", ->
-        unless isPreviewRefresh
-          scope.$apply()
-      )
-
-      $wmdInput = $("#wmd-input-"+editorUniqueId)
-
-      scope.$watch('markdown', (value,oldValue) ->
-        $wmdInput.val(value)
-        isPreviewRefresh = true
-        editor.refreshPreview()
         isPreviewRefresh = false
-      )
+
+        converter.hooks.chain("preConversion", (markdown) ->
+          scope.markdown = markdown
+          markdown
+        )
+
+        converter.hooks.chain("postConversion", (html) ->
+          scope.html = html
+          html
+        )
+
+        editor.hooks.chain("onPreviewRefresh", ->
+          unless isPreviewRefresh
+            scope.$apply()
+        )
+
+        $wmdInput = $("#wmd-input-"+scope.editorUniqueId)
+
+        scope.$watch('markdown', (value,oldValue) ->
+          $wmdInput.val(value)
+          isPreviewRefresh = true
+          editor.refreshPreview()
+          isPreviewRefresh = false
+        )
   ])
 

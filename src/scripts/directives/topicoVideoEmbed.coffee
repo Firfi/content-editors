@@ -4,6 +4,7 @@ angular.module('topicoContentEditors')
   .directive('topicoVideoEmbed', ['topicoCEVideoSvc', (topicoCEVideoSvc) ->
     template: '<iframe width="{{ config.width }}" height="{{ config.height }}" src="{{ config.src }}" frameborder="0" allowfullscreen></iframe>'
     restrict: 'E'
+    replace: true
     link: (scope, element, attrs) ->
       types = topicoCEVideoSvc.videoTypes
       res = topicoCEVideoSvc.res(scope, element, attrs)

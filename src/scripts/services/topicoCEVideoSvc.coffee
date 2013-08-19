@@ -15,8 +15,10 @@ angular.module('topicoContentEditors')
       validate: (subType) ->
         topicoCESvc.validate(subType, @list)
       subType: (res) ->
-        subType = res.subType; subType ?= (m[0] for t in @list when m = res.url.match new RegExp(t, 'i'))[0]
-        try subType.toLowerCase() catch e then 'youtube'
+        subType = res.subType;
+        try
+          (subType = (m[0] for t in @list when m = res.url.match new RegExp(t, 'i'))[0]).toLowerCase()
+        catch e then 'youtube'
       config: (res) ->
         getUrl = () ->
           embed = {
@@ -26,6 +28,7 @@ angular.module('topicoContentEditors')
           "#{location.protocol}//#{sub(res)}.com/#{embed}/#{res.sourceId}"
         url = res.url ? getUrl()
         url = url.replace /watch\?v=/, 'embed/'
+
         src: url
         width: res.width
         height: res.height

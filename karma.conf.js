@@ -9,8 +9,10 @@ files = [
   JASMINE_ADAPTER,
   'src/bower_components/angular/angular.js',
   'src/bower_components/angular-mocks/angular-mocks.js',
-  '.temp/scripts/*.js',
-  '.temp/scripts/**/*.js',
+  'src/bower_components/jquery/jquery.js',
+  'topico-content-editors-plugins.src.js',
+  '.temp/scripts/init.js',
+  '.temp/scripts/*/*.js',
   '.temp/mock/**/*.js',
   '.temp/spec/**/*.js'
 ];
