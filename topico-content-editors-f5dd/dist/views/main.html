@@ -3,6 +3,10 @@
 <div>
     <topico-video-embed res="youtube"></topico-video-embed>
 </div>
+<h2>Vimeo content</h2>
+<div>
+    <topico-video-embed res="vimeo"></topico-video-embed>
+</div>
 <h2>Markdown editor</h2>
 <h3>Editor</h3>
 <div>
@@ -15,4 +19,17 @@
 <h3>Generated HTML (one-way binging)</h3>
 <div>
     <textarea ng-model="descriptionHtml"></textarea>
+</div>
+
+<h3>Second Editor</h3>
+<div>
+    <topico-editor markdown="descriptionMarkdown2" html="descriptionHtml2"></topico-editor>
+</div>
+<h3>Raw markdown (two-way binding)</h3>
+<div>
+    <textarea ng-model="descriptionMarkdown2"></textarea>
+</div>
+<h3>Generated HTML (one-way binging)</h3>
+<div>
+    <textarea ng-model="descriptionHtml2"></textarea>
 </div>

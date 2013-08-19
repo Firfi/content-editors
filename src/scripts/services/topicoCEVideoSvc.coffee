@@ -5,11 +5,6 @@
 
 angular.module('topicoContentEditors')
   .service 'topicoCEVideoSvc', ['topicoCESvc', (topicoCESvc) ->
-    res: (scope, element, attrs) ->
-      res = attrs.res
-      res = scope.$eval(res) if typeof res is 'string'
-      console.warn "res is not defined for element: #{ element[0].nodeName }" unless res
-      res
     videoTypes:
       list: ['youtube', 'vimeo']
       validate: (subType) ->
@@ -20,16 +15,35 @@ angular.module('topicoContentEditors')
           (subType = (m[0] for t in @list when m = res.url.match new RegExp(t, 'i'))[0]).toLowerCase()
         catch e then 'youtube'
       config: (res) ->
-        getUrl = () ->
+        subtype = @subType(res)
+        width = {
+          youtube: 838
+          vimeo: 500
+        }[subtype]
+        height = {
+          youtube: 480
+          vimeo: 281
+        }[subtype]
+        getUrl = ->
           embed = {
             youtube: 'embed'
             vimeo: 'video'
-          }[sub(res)]
-          "#{location.protocol}//#{sub(res)}.com/#{embed}/#{res.sourceId}"
-        url = res.url ? getUrl()
+          }[subtype]
+          subdomain = {
+            youtube: ''
+            vimeo: 'player.'
+          }[subtype]
+          query = {
+            youtube: ''
+            vimeo: "?title=0&amp;byline=0&amp;portrait=0&amp;badge=0"
+          }[subtype]
+          "#{location.protocol}//#{subdomain}#{subtype}.com/#{embed}/#{res.sourceId}#{query}"
+        url = getUrl() ? res.url
         url = url.replace /watch\?v=/, 'embed/'
 
         src: url
-        width: res.width
-        height: res.height
+        width: res.width ? width
+        height: res.height ? height
+        frameborder: 0
+        desc: res.desc ? ''
   ]

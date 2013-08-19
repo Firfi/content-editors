@@ -5,11 +5,11 @@ angular.module('topicoContentEditors', []);
 */
 'use strict';
 angular.module('topicoContentEditors').directive('topicoEditor', [
-  'topicoCEEditorSvc', '$compile', '$timeout', function(topicoCEEditorSvc, $compile, $timeout) {
+  'topicoCEEditorSvc', '$compile', '$timeout', '$window', function(topicoCEEditorSvc, $compile, $timeout, $window) {
     var nextId;
     nextId = 0;
     return {
-      template: '<div class="pagedown-bootstrap-editor">\n <div>\n   <div class="wmd-panel-{{ editorUniqueId }}">\n     <div id="wmd-button-bar-{{ editorUniqueId }}">\n       <textarea class="wmd-input" id="wmd-input-{{ editorUniqueId }}"></textarea>\n     </div>\n     <div id="wmd-preview-{{ editorUniqueId }}" class="wmd-panel wmd-preview"></div>\n   </div>\n </div>\n</div>',
+      template: '<div class="pagedown-bootstrap-editor">\n<div class="wmd-panel">\n  <div id="wmd-button-bar-{{ editorUniqueId }}"></div>\n  <textarea class="wmd-input" id="wmd-input-{{ editorUniqueId }}"></textarea>\n  <div id="wmd-preview-{{ editorUniqueId }}" class="wmd-panel wmd-preview"></div>\n</div>\n</div>',
       replace: true,
       restrict: 'E',
       scope: {
@@ -17,7 +17,9 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
         html: '='
       },
       link: function(scope, element, attrs) {
+        var doc;
         scope.editorUniqueId = nextId++;
+        doc = window.document;
         return $timeout(function() {
           var $wmdInput, converter, editor, help, isPreviewRefresh;
           converter = new Markdown.Converter();
@@ -26,6 +28,10 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
           };
           editor = new Markdown.Editor(converter, "-" + scope.editorUniqueId, {
             handler: help
+          }, {
+            buttonBar: element[0].firstElementChild.children[0],
+            input: element[0].firstElementChild.children[1],
+            preview: element[0].firstElementChild.children[2]
           });
           editor.run();
           isPreviewRefresh = false;
@@ -62,13 +68,16 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
 angular.module('topicoContentEditors').directive('topicoVideoEmbed', [
   'topicoCEVideoSvc', function(topicoCEVideoSvc) {
     return {
-      template: '<iframe width="{{ config.width }}" height="{{ config.height }}" src="{{ config.src }}" frameborder="0" allowfullscreen></iframe>',
+      template: '<div class="topico-embed-video">\n<iframe\n\nwidth="{{ config.width }}"\nheight="{{ config.height }}"\nsrc="{{ config.src }}"\nframeborder="{{ config.frameborder }}"\nwebkitAllowFullScreen mozallowfullscreen allowFullScreen>\n\n</iframe>\n<div ng-bind-html-unsafe="config.desc"></div>\n</div>',
       restrict: 'E',
+      scope: {
+        res: '='
+      },
       replace: true,
       link: function(scope, element, attrs) {
         var err, res, types;
         types = topicoCEVideoSvc.videoTypes;
-        res = topicoCEVideoSvc.res(scope, element, attrs);
+        res = scope.res;
         if ((err = types.validate(res.subType)) !== true) {
           element.text('');
           return console.warn(err);
@@ -120,17 +129,6 @@ angular.module('topicoContentEditors').service('topicoCESvc', function() {
 angular.module('topicoContentEditors').service('topicoCEVideoSvc', [
   'topicoCESvc', function(topicoCESvc) {
     return {
-      res: function(scope, element, attrs) {
-        var res;
-        res = attrs.res;
-        if (typeof res === 'string') {
-          res = scope.$eval(res);
-        }
-        if (!res) {
-          console.warn("res is not defined for element: " + element[0].nodeName);
-        }
-        return res;
-      },
       videoTypes: {
         list: ['youtube', 'vimeo'],
         validate: function(subType) {
@@ -158,21 +156,40 @@ angular.module('topicoContentEditors').service('topicoCEVideoSvc', [
           }
         },
         config: function(res) {
-          var getUrl, url, _ref;
+          var getUrl, height, subtype, url, width, _ref, _ref1, _ref2, _ref3;
+          subtype = this.subType(res);
+          width = {
+            youtube: 838,
+            vimeo: 500
+          }[subtype];
+          height = {
+            youtube: 480,
+            vimeo: 281
+          }[subtype];
           getUrl = function() {
-            var embed;
+            var embed, query, subdomain;
             embed = {
               youtube: 'embed',
               vimeo: 'video'
-            }[sub(res)];
-            return "" + location.protocol + "//" + (sub(res)) + ".com/" + embed + "/" + res.sourceId;
+            }[subtype];
+            subdomain = {
+              youtube: '',
+              vimeo: 'player.'
+            }[subtype];
+            query = {
+              youtube: '',
+              vimeo: "?title=0&amp;byline=0&amp;portrait=0&amp;badge=0"
+            }[subtype];
+            return "" + location.protocol + "//" + subdomain + subtype + ".com/" + embed + "/" + res.sourceId + query;
           };
-          url = (_ref = res.url) != null ? _ref : getUrl();
+          url = (_ref = getUrl()) != null ? _ref : res.url;
           url = url.replace(/watch\?v=/, 'embed/');
           return {
             src: url,
-            width: res.width,
-            height: res.height
+            width: (_ref1 = res.width) != null ? _ref1 : width,
+            height: (_ref2 = res.height) != null ? _ref2 : height,
+            frameborder: 0,
+            desc: (_ref3 = res.desc) != null ? _ref3 : ''
           };
         }
       }

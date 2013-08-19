@@ -1,11 +1,15 @@
 'use strict'
 
 describe 'Directive: topicoVideoEmbed', () ->
-  youtubeRes = null
-  vimeoRes = null
-  beforeEach =>
+  res = {}
+  $scope = null
+  $compile = null
+  beforeEach ->
     module 'topicoContentEditors'
-    youtubeRes =
+    inject (_$rootScope_, _$compile_) ->
+      $scope = _$rootScope_
+      $compile = _$compile_
+    res.youtube =
       "type": "Res"
       "desc": "Constructing solutions to systems of equations"
       "sourceId": "Z96vkuybvjE"
@@ -21,7 +25,7 @@ describe 'Directive: topicoVideoEmbed', () ->
         "predicate": "IS_ABOUT"
         "objectId": "51fb288003644239e34d9bb7"
       ]
-    vimeoRes =
+    res.vimeo =
       "type": "Res"
       "desc": "<p><a href=\"http://vimeo.com/71336599\">The Thing About Dogs</a> from <a href=\"http://vimeo.com/danielkoren\">Daniel Koren</a> on <a href=\"https://vimeo.com\">Vimeo</a>.",
       "sourceId": "71336599"
@@ -40,16 +44,16 @@ describe 'Directive: topicoVideoEmbed', () ->
 
   element = {}
 
-  it 'should add youtube iframe', inject ($rootScope, $compile) ->
-    element = angular.element '<topico-video-embed res="youtube"></topico-video-embed>'
-    $rootScope.youtube = youtubeRes
+  make = (type) ->
+    element = angular.element "<topico-video-embed res=\"#{type}\"></topico-video-embed>"
+    $scope[type] = res[type]
+    element = $compile(element) $scope
+    $scope.$digest()
+    element
 
-    element = $compile(element) $rootScope
-    expect(element.prop('tagName').toLowerCase()).toEqual('iframe')
+  it 'should add youtube iframe', ->
+    expect(make('youtube').children()[0].tagName.toLowerCase()).toEqual('iframe')
 
-  it 'should add vimeo iframe', inject ($rootScope, $compile) ->
-    element = angular.element '<topico-video-embed res="vimeo"></topico-video-embed>'
-    $rootScope.vimeo = vimeoRes
+  it 'should add vimeo iframe', ->
+    expect(make('vimeo').children()[0].tagName.toLowerCase()).toEqual('iframe')
 
-    element = $compile(element) $rootScope
-    expect(element.prop('tagName').toLowerCase()).toEqual('iframe')
