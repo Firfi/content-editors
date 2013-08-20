@@ -8,7 +8,7 @@
     "jquery": "~1.9.1",
     "bootstrap-sass": "~2.3.1",
     "es5-shim": "~2.0.8",
-    "pagedown-bootstrap": "git@github.com:Firfi/pagedown-bootstrap.git"
+    "pagedown-bootstrap": "Firfi/pagedown-bootstrap#0.0.0"
   },
   "devDependencies": {
     "angular-mocks": "~1.0.7",

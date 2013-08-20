@@ -6,3 +6,4 @@ src/bower_components
 bower_components
 .idea
 topico-content-editors.iml
+Vagrantfile

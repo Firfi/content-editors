@@ -116,3 +116,16 @@ The following projects may be the basis for this project.  I want to use PageDow
 
 * Project with example of AngularJS directives for PageDown editor: [sample angular editors](https://github.com/programmieraffe/angular-editors)
     * I don't think this can be used as-is, but can be an example of how to create the text editor directive
+
+
+
+* How-to deploy:
+
+1) Install node.js: https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager
+2) Install yeoman: npm install -g yo
+3) Install Git
+4) Install js dependency packages: 'bower install'
+5) Install deploy dependencies: 'npm install'
+6) Build project: 'grunt'
+7) Run tests: 'grunt test' // it uses google-chrome
+
