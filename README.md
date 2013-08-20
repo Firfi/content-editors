@@ -132,6 +132,7 @@ It uses google-chrome for tests. If you run it by ssh then you could change brow
 
 * To deploy demo site, change directory to topico-content-editors-f5dd and
 
-1) bower install
+1) bower install // on this step it may be necessary to add your public key to bitbucket and to have permissions to topico private repo.
 2) npm install
-
+3) grunt
+4) Run server from dist subdirectory // to run server it is convenient to use foreman from heroku-toolbelt: https://toolbelt.heroku.com/. Toolbelt is needed anyway to deploy in heroku. In that case you can run 'foreman start' from root directory (original topico-content-editors). In that case we need global coffee installation too.
