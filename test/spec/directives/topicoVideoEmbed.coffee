@@ -57,3 +57,8 @@ describe 'Directive: topicoVideoEmbed', () ->
   it 'should add vimeo iframe', ->
     expect(make('vimeo').children()[0].tagName.toLowerCase()).toEqual('iframe')
 
+  it 'youtube iframe should have youtube src', ->
+    expect(make('youtube').children()[0].getAttribute('src')).toMatch(/youtube/)
+
+  it 'vimeo iframe should have vimeo src', ->
+    expect(make('vimeo').children()[0].getAttribute('src')).toMatch(/vimeo/)

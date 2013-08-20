@@ -69,3 +69,10 @@ describe 'Service: topicoCEVideoSvc', () ->
 
   it 'should detect vimeoRes without subtype field and url field subtype as youtube', ->
     expect(topicoCEVideoSvc.videoTypes.subType(vimeoRes.without('subType', 'url'))).toBe('youtube')
+
+  it 'should produce valid youtube url', ->
+    expect(topicoCEVideoSvc.videoTypes.config(youtubeRes).src).toBe('http://youtube.com/embed/Z96vkuybvjE')
+
+  it 'should produce valid vimeo url', ->
+    expect(topicoCEVideoSvc.videoTypes.config(vimeoRes).src).toBe('http://player.vimeo.com/video/71336599?title=0&amp;byline=0&amp;portrait=0&amp;badge=0')
+
