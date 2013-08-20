@@ -119,20 +119,22 @@ The following projects may be the basis for this project.  I want to use PageDow
 
 
 
-* How-to deploy:
+### How-to deploy:
 
-1) Install node.js: https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager
-2) Install yeoman: npm install -g yo
-3) Install Git
-4) Install js dependency packages: 'bower install'
-5) Install deploy dependencies: 'npm install'
-6) Build project: 'grunt'
-7) Run tests: 'grunt test'
+* Install node.js: https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager
+* Install yeoman: npm install -g yo
+* Install Git
+* Install js dependency packages: 'bower install'
+* Install deploy dependencies: 'npm install'
+* Build project: 'grunt'
+* Run tests: 'grunt test'
 It uses google-chrome for tests. If you run it by ssh then you could change browser to 'PhantomJS' in karma.conf.js or just omit this step.
 
-* To deploy demo site, change directory to topico-content-editors-f5dd and
+## To deploy demo site, change directory to topico-content-editors-f5dd and
 
-1) bower install // on this step it may be necessary to add your public key to bitbucket and to have permissions to topico private repo.
-2) npm install
-3) grunt
-4) Run server from dist subdirectory // to run server it is convenient to use foreman from heroku-toolbelt: https://toolbelt.heroku.com/. Toolbelt is needed anyway to deploy in heroku. In that case you can run 'foreman start' from root directory (original topico-content-editors). In that case we need global coffee installation too.
+* bower install
+On this step it may be necessary to add your public key to bitbucket and to have permissions to topico private repo.
+* npm install
+* grunt
+* Run server from dist subdirectory
+To run server it is convenient to use foreman from heroku-toolbelt: https://toolbelt.heroku.com/. Toolbelt is needed anyway to deploy in heroku. In that case you can run 'foreman start' from root directory (original topico-content-editors). In that case we need global coffee installation too.
