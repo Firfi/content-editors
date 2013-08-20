@@ -127,5 +127,11 @@ The following projects may be the basis for this project.  I want to use PageDow
 4) Install js dependency packages: 'bower install'
 5) Install deploy dependencies: 'npm install'
 6) Build project: 'grunt'
-7) Run tests: 'grunt test' // it uses google-chrome
+7) Run tests: 'grunt test'
+It uses google-chrome for tests. If you run it by ssh then you could change browser to 'PhantomJS' in karma.conf.js or just omit this step.
+
+* To deploy demo site, change directory to topico-content-editors-f5dd and
+
+1) bower install
+2) npm install
 
