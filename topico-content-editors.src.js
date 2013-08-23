@@ -5,7 +5,7 @@ angular.module('topicoContentEditors', []);
 */
 'use strict';
 angular.module('topicoContentEditors').directive('topicoEditor', [
-  'topicoCEEditorSvc', '$compile', '$timeout', '$window', function(topicoCEEditorSvc, $compile, $timeout, $window) {
+  'topicoCEEditorSvc', 'topicoResourcesSvc', '$compile', '$timeout', '$window', function(topicoCEEditorSvc, topicoResourcesSvc, $compile, $timeout, $window) {
     var nextId;
     nextId = 0;
     return {
@@ -37,11 +37,12 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
           isPreviewRefresh = false;
           converter.hooks.chain("preConversion", function(markdown) {
             scope.markdown = markdown;
-            return markdown;
+            return markdown.replace(/{{(.+?)}}/g, function(str, p1) {
+              return topicoResourcesSvc.getMarkdown(p1.trim());
+            });
           });
           converter.hooks.chain("postConversion", function(html) {
-            scope.html = html;
-            return html;
+            return scope.html = html;
           });
           editor.hooks.chain("onPreviewRefresh", function() {
             if (!isPreviewRefresh) {
@@ -199,4 +200,28 @@ angular.module('topicoContentEditors').service('topicoCEVideoSvc', [
 
 /*
 //@ sourceMappingURL=topicoCEVideoSvc.js.map
+*/
+angular.module('topicoContentEditors').service('topicoResourcesSvc', function() {
+  var resourceRegistry;
+  resourceRegistry = {
+    first: {
+      id: 'first',
+      markdown: "*my included markdown first*"
+    },
+    second: {
+      id: 'second',
+      markdown: "# my included markdown second"
+    }
+  };
+  return {
+    getMarkdown: function(resource) {
+      var id, _ref;
+      id = resource.id || resource;
+      return ((_ref = resourceRegistry[id]) != null ? _ref.markdown : void 0) || id;
+    }
+  };
+});
+
+/*
+//@ sourceMappingURL=topicoResourcesSvc.js.map
 */

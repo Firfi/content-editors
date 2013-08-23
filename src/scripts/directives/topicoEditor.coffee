@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('topicoContentEditors')
-  .directive('topicoEditor', ['topicoCEEditorSvc', '$compile', '$timeout', '$window', (topicoCEEditorSvc, $compile, $timeout, $window) ->
+  .directive('topicoEditor', ['topicoCEEditorSvc', 'topicoResourcesSvc', '$compile', '$timeout', '$window', (topicoCEEditorSvc, topicoResourcesSvc, $compile, $timeout, $window) ->
 
     nextId = 0;
 
@@ -49,12 +49,12 @@ angular.module('topicoContentEditors')
 
         converter.hooks.chain("preConversion", (markdown) ->
           scope.markdown = markdown
-          markdown
+          markdown.replace /{{(.+?)}}/g, (str, p1) ->
+            topicoResourcesSvc.getMarkdown(p1.trim())
         )
 
         converter.hooks.chain("postConversion", (html) ->
           scope.html = html
-          html
         )
 
         editor.hooks.chain("onPreviewRefresh", ->
