@@ -49,7 +49,7 @@ angular.module('topicoContentEditors')
 
         converter.hooks.chain("preConversion", (markdown) ->
           scope.markdown = markdown
-          markdown.replace /{{(.+?)}}/g, (str, p1) ->
+          markdown.replace /{{include (.+?)}}/g, (str, p1) ->
             topicoResourcesSvc.getMarkdown(p1.trim())
         )
 
