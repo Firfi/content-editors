@@ -37,7 +37,7 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
           isPreviewRefresh = false;
           converter.hooks.chain("preConversion", function(markdown) {
             scope.markdown = markdown;
-            return markdown.replace(/{{(.+?)}}/g, function(str, p1) {
+            return markdown.replace(/{{include (.+?)}}/g, function(str, p1) {
               return topicoResourcesSvc.getMarkdown(p1.trim());
             });
           });
