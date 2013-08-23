@@ -117,9 +117,55 @@ The following projects may be the basis for this project.  I want to use PageDow
 * Project with example of AngularJS directives for PageDown editor: [sample angular editors](https://github.com/programmieraffe/angular-editors)
     * I don't think this can be used as-is, but can be an example of how to create the text editor directive
 
+### Text Editor Includes Feature
 
+The text editor includes a feature whereby the markdown of other resources can be dynamically included in the markdown resource.  This happens when the markdown is being translated to HTML; the markdown of the included resources is looked up, and substituted in.  There's a specific syntax for including the markdown from another resource: {{include <resource ID> .  Each resource has a unique ID, and is included via the ID.  For instance, if a resource with ID 12345 has the following markdown:
 
-### How-to deploy:
+    * item one
+    * item two
+
+And another resource has the following markdown:
+
+    This is the resource that's referring to 12345.  The content should be included below:
+    
+    {{include 12345}}
+    
+    Above is the included content.
+
+The effective markdown that will be translated to HTML will be:
+
+    This is the resource that's referring to 12345.  The content should be included below:
+    
+    * item one
+    * item two
+    
+    Above is the included content.
+
+#### Resource Selector
+
+A user may either enter the include directive themselves directly in the markdown editor, or they may use a new toolbar helper that helps them search for the resource to include.  Following is a screenshot of the resource selector dialog that is displayed when the user clicks on the 'include resource' toolbar button.
+
+![Resource Selection Dialog](design/resourceSelector/pages/resourceselection.png)
+
+The user can optionally select to filter the resources by type via the checkboxes at the top:
+
+![Resource Selection Dialog - Filter by type](design/resourceSelector/pages/resourceselectionmultitype.png)
+
+The user may select from one of the results, and the include directive will get inserted into the markdown document using the resource ID.
+
+#### Resources service
+
+The resource service is used to find resources matching types, and to get the markdown associated with a resource.  Following is the interface for the resource service:
+
+* findResources(resourceTypes, searchString, resultsCallback)
+  * resourceTypes : array of the resource types to filter by.  May be empty.
+  * searchString : text user has entered to filter by
+  * resultsCallback : function to be called with results.  The function will take the list of resources as a parameter.  Each resource will have a resSchemaName attribute which indicates the type, and a title attribute to display.
+* getMarkdown(resource) : returns markdown
+  * resource : Resource object as returned by findResources callback
+  * return: Markdown for the given resource
+
+## How-to deploy:
 
 * Install node.js: https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager
 * Install yeoman: npm install -g yo
@@ -130,7 +176,7 @@ The following projects may be the basis for this project.  I want to use PageDow
 * Run tests: 'grunt test'
 It uses google-chrome for tests. If you run it by ssh then you could change browser to 'PhantomJS' in karma.conf.js or just omit this step.
 
-## To deploy demo site, change directory to topico-content-editors-f5dd and
+**To deploy demo site, change directory to topico-content-editors-f5dd and**
 
 * bower install
 On this step it may be necessary to add your public key to bitbucket and to have permissions to topico private repo.
