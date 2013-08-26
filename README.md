@@ -145,11 +145,11 @@ The effective markdown that will be translated to HTML will be:
 
 A user may either enter the include directive themselves directly in the markdown editor, or they may use a new toolbar helper that helps them search for the resource to include.  Following is a screenshot of the resource selector dialog that is displayed when the user clicks on the 'include resource' toolbar button.
 
-![Resource Selection Dialog](design/resourceSelector/pages/resourceselection.png)
+![Resource Selection Dialog](http://topico.herokuapp.com/design/resourceSelector/pages/resourceselection.png)
 
 The user can optionally select to filter the resources by type via the checkboxes at the top:
 
-![Resource Selection Dialog - Filter by type](design/resourceSelector/pages/resourceselectionmultitype.png)
+![Resource Selection Dialog - Filter by type](http://topico.herokuapp.com/design/resourceSelector/pages/resourceselectionmultitype.png)
 
 The user may select from one of the results, and the include directive will get inserted into the markdown document using the resource ID.
 
