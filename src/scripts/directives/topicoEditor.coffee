@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('topicoContentEditors')
-  .directive('topicoEditor', ['topicoCEEditorSvc', 'topicoResourcesSvc', '$compile', '$timeout', '$window', (topicoCEEditorSvc, topicoResourcesSvc, $compile, $timeout, $window) ->
+  .directive('topicoEditor', ['topicoCEEditorSvc', 'topicoResourcesSvc', '$compile', '$timeout', '$rootScope', (topicoCEEditorSvc, topicoResourcesSvc, $compile, $timeout, $rootScope) ->
 
     nextId = 0;
 
@@ -47,10 +47,30 @@ angular.module('topicoContentEditors')
 
         isPreviewRefresh = false
 
+        watches = {} # night gathers, and now my watch begins
+
         converter.hooks.chain("preConversion", (markdown) ->
           scope.markdown = markdown
-          markdown.replace /{{include (.+?)}}/g, (str, p1) ->
-            topicoResourcesSvc.getMarkdown(p1.trim())
+          newWatches = []
+          resultMd = markdown.replace /{{include (.+?)}}/g, (str, p1) ->
+            p1 = p1.trim()
+            wtc = ->
+              # we don't know about these variables on isolated scope create phase so use parent
+              scope.$parent.$watch p1, (o,n) -> # save unwatch function
+                $timeout ->
+                  editor.refreshPreview()
+            watches[p1] = wtc() unless watches[p1]
+            # log new/and old and not-updated watch
+            newWatches.push p1
+
+            scope.$parent[p1] ? p1
+
+          # remove watches for what {{include ...}} was removed
+          oldWatches = jQuery.extend({}, watches) # clone
+          delete oldWatches[newWatches]
+          ow() for ow in oldWatches # call unwatch function
+
+          resultMd
         )
 
         converter.hooks.chain("postConversion", (html) ->
@@ -70,5 +90,10 @@ angular.module('topicoContentEditors')
           editor.refreshPreview()
           isPreviewRefresh = false
         )
+
+        # returns object attributes intersection and
+        intersect = (x,y) ->
+
+
   ])
 

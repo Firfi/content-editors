@@ -38,4 +38,8 @@ angular.module('topicoContentEditorsF5ddApp')
         "objectId": "51fb288003644239e34d9bb7"
       }]
     };
+
+    $scope.first = "*my first included markdown*"
+    $scope.second = "# my second included markdown"
+
   });
