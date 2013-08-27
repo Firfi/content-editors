@@ -91,7 +91,7 @@ angular.module('topicoContentEditors')
           scope.includeResource = (id) ->
             cursor = scope.popupState.carret
             text = scope.popupState.text
-            start = text.substring(0, cursor-1)
+            start = text.substring(0, cursor)
             end = text.substring(cursor, text.length)
             newText = "#{start}{{include #{id}}}#{end}"
             editorArea.val(newText)
