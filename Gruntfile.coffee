@@ -146,7 +146,6 @@ module.exports = (grunt) ->
           ext: '.js'
         ]
     uglify:
-    # concat js files before minification
       js:
         files: [
             {
@@ -164,7 +163,6 @@ module.exports = (grunt) ->
           preserveComments: 'all'
 
     concat:
-    # concat js files before minification
       js:
         src: ['.temp/scripts/*.js', '.temp/scripts/**/*.js']
         dest: "#{yeomanConfig.dist}/scripts/scripts.src.js"
@@ -183,7 +181,7 @@ module.exports = (grunt) ->
           base: "#{yeomanConfig.app}/views"
           concat: "js"
           module:
-            define: true
+            define: false
         src: "#{yeomanConfig.app}/views/{,**/}**.html",
         dest: "#{yeomanConfig.temp}/scripts/templates.js"
 

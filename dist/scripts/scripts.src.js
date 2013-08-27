@@ -1,22 +1,56 @@
+angular.module('topicoContentEditors', ['topicoAngularServiceApp']);
 
+jQuery.fn.getCursorPosition = function() {
+  var input, sel, selLen;
+  input = jQuery(this).get(0);
+  if (document.selection) {
+    input.focus();
+    sel = document.selection.createRange();
+    selLen = document.selection.createRange().text.length;
+    sel.moveStart('character', -input.value.length);
+    return sel.text.length - selLen;
+  } else if (input.selectionStart || input.selectionStart === '0') {
+    return input.selectionStart;
+  } else {
+    return 0;
+  }
+};
 
 /*
 //@ sourceMappingURL=init.js.map
 */
-angular.module("topicoContentEditors", []).run(["$templateCache", function($templateCache) {
+angular.module("topicoContentEditors").run(["$templateCache", function($templateCache) {
 
   $templateCache.put("editor/includeDialog.html",
-    "<div class=\"modal fade\" id=\"wmd-include-{{ editorUniqueId }}\">\n" +
+    "<div class=\"modal fade\" id=\"{{ modalId }}\">\n" +
     "    <div class=\"modal-header\">\n" +
     "        <a class=\"close\" data-dismiss=\"modal\">&times;</a>\n" +
-    "        <h3>Modal Header</h3>\n" +
+    "        <h3>Include resource</h3>\n" +
     "    </div>\n" +
     "    <div class=\"modal-body\">\n" +
-    "        <p>Test Modal</p>\n" +
+    "        <p>Select resource type</p>\n" +
+    "        <div>\n" +
+    "            <button ng-repeat=\"type in types\"\n" +
+    "                    button-toggle=\"active\"\n" +
+    "                    class=\"btn\" ng-model=\"type.checked\">\n" +
+    "                {{ type.name }}\n" +
+    "            </button>\n" +
+    "        </div>\n" +
+    "        <div>\n" +
+    "            <label>\n" +
+    "                <input ng-model=\"filters.title\" type=\"text\"/>\n" +
+    "                <span>Filter title</span>\n" +
+    "            </label>\n" +
+    "        </div>\n" +
+    "        <table class=\"table table-striped table-bordered table-condensed resources-popup-table\">\n" +
+    "            <tr ng-repeat=\"resource in selectedResources()\" ng-click=\"includeResource(resource.id)\">\n" +
+    "                <td>{{ resource.type }}</td>\n" +
+    "                <td>{{ resource.title }}</td>\n" +
+    "            </tr>\n" +
+    "        </table>\n" +
     "    </div>\n" +
     "    <div class=\"modal-footer\">\n" +
     "        <a href=\"#\" class=\"btn\" data-dismiss=\"modal\">Close</a>\n" +
-    "        <a href=\"#\" class=\"btn btn-primary\">Save Changes</a>\n" +
     "    </div>\n" +
     "</div>"
   );
@@ -33,12 +67,41 @@ angular.module("topicoContentEditors", []).run(["$templateCache", function($temp
 }]);
 
 'use strict';
+angular.module('topicoContentEditors').directive('buttonToggle', function() {
+  return {
+    restrict: 'A',
+    require: 'ngModel',
+    link: function($scope, element, attr, ctrl) {
+      var classToToggle;
+      classToToggle = attr.buttonToggle;
+      element.bind('click', function() {
+        var checked;
+        checked = ctrl.$viewValue;
+        return $scope.$apply(function() {
+          return ctrl.$setViewValue(!checked);
+        });
+      });
+      return $scope.$watch(attr.ngModel, function(nv, ov) {
+        if (nv) {
+          return element.addClass(classToToggle);
+        } else {
+          return element.removeClass(classToToggle);
+        }
+      });
+    }
+  };
+});
+
+/*
+//@ sourceMappingURL=buttonToggle.js.map
+*/
+'use strict';
 angular.module('topicoContentEditors').directive('topicoEditor', [
-  'topicoCEEditorSvc', 'topicoResourcesSvc', '$compile', '$timeout', '$templateCache', function(topicoCEEditorSvc, topicoResourcesSvc, $compile, $timeout, $templateCache) {
+  'topicoCEEditorSvc', 'topicoResourcesSvc', '$compile', '$timeout', '$templateCache', '$filter', 'topicoResourcesService', 'topicoCETestResourceSvc', function(topicoCEEditorSvc, topicoResourcesSvc, $compile, $timeout, $templateCache, $filter, topicoResourcesService, topicoCETestResourceSvc) {
     var nextId;
     nextId = 0;
     return {
-      template: '<div class="pagedown-bootstrap-editor">\n<div class="wmd-panel">\n  <div id="wmd-button-bar-{{ editorUniqueId }}"></div>\n  <textarea class="wmd-input" id="wmd-input-{{ editorUniqueId }}"></textarea>\n  <div id="wmd-preview-{{ editorUniqueId }}" class="wmd-panel wmd-preview"></div>\n</div>\n<div ng-include=" \'editor/includeDialog.html\' "></div>\n<a id="{{ includeLinkId }}" style="display: none;" href="#wmd-include-{{ editorUniqueId }}" data-toggle="modal"></a>\n</div>',
+      template: '<div class="pagedown-bootstrap-editor">\n<div class="wmd-panel">\n  <div id="wmd-button-bar-{{ editorUniqueId }}"></div>\n  <textarea class="wmd-input" id="{{ editorAreaId }}"></textarea>\n  <div id="wmd-preview-{{ editorUniqueId }}" class="wmd-panel wmd-preview"></div>\n</div>\n<div ng-include=" \'editor/includeDialog.html\' "></div>\n<a id="{{ includeLinkId }}" style="display: none;" href="#{{ modalId }}" data-toggle="modal"></a>\n</div>',
       replace: true,
       restrict: 'E',
       scope: {
@@ -48,14 +111,67 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
       link: function(scope, element, attrs) {
         scope.editorUniqueId = nextId++;
         scope.includeLinkId = "wmd-include-link-" + scope.editorUniqueId;
+        scope.editorAreaId = "wmd-input-" + scope.editorUniqueId;
+        scope.modalId = "wmd-include-" + scope.editorUniqueId;
+        scope.types = $.map(topicoCETestResourceSvc.resourcesByType, function(v, k) {
+          return {
+            name: v.type,
+            resources: v.resources,
+            checked: false
+          };
+        });
+        scope.selectedTypes = function() {
+          var filtered;
+          filtered = $filter('filter')(scope.types, {
+            checked: true
+          });
+          return filtered = filtered.length > 0 ? filtered : scope.types;
+        };
+        scope.filters = {
+          title: ''
+        };
+        scope.selectedResources = function() {
+          var r, _ref;
+          r = $.map(scope.selectedTypes(), function(type) {
+            if (scope.filters.title === '') {
+              return type.resources;
+            } else {
+              return $filter('filter')(type.resources, function(res) {
+                var _ref, _ref1;
+                return ((_ref = res.title) != null ? (_ref1 = _ref.toLowerCase()) != null ? _ref1.indexOf(scope.filters.title.toLowerCase()) : void 0 : void 0) === 0;
+              });
+            }
+          });
+          return (_ref = []).concat.apply(_ref, r);
+        };
         return $timeout(function() {
-          var $wmdInput, converter, editor, help, includeCallback, intersect, isPreviewRefresh, watches;
+          var $wmdInput, converter, editor, editorArea, help, includeCallback, includeLink, isPreviewRefresh, modal, watches;
+          includeLink = $('#' + scope.includeLinkId);
+          editorArea = $('#' + scope.editorAreaId);
+          modal = $('#' + scope.modalId);
           converter = new Markdown.Converter();
           help = function() {
             return alert("Topico markdown editor");
           };
-          includeCallback = function(a, b) {
-            return $('#' + scope.includeLinkId).click();
+          includeCallback = function() {
+            scope.popupState = {
+              carret: editorArea.getCursorPosition(),
+              text: editorArea.val()
+            };
+            return includeLink.click();
+          };
+          scope.includeResource = function(id) {
+            var cursor, end, newText, start, text;
+            cursor = scope.popupState.carret;
+            text = scope.popupState.text;
+            start = text.substring(0, cursor - 1);
+            end = text.substring(cursor, text.length);
+            newText = "" + start + "{{include " + id + "}}" + end;
+            editorArea.val(newText);
+            $timeout(function() {
+              return editor.refreshPreview();
+            });
+            return modal.modal('hide');
           };
           editor = new Markdown.Editor(converter, "-" + scope.editorUniqueId, {
             handler: help,
@@ -76,16 +192,20 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
               var wtc, _ref;
               p1 = p1.trim();
               wtc = function() {
-                return scope.$parent.$watch(p1, function(o, n) {
-                  return $timeout(function() {
-                    return editor.refreshPreview();
+                if (scope.$parent[p1]) {
+                  return scope.$parent.$watch(p1, function(o, n) {
+                    return $timeout(function() {
+                      return editor.refreshPreview();
+                    });
                   });
-                });
+                }
               };
-              if (!watches[p1]) {
-                watches[p1] = wtc();
+              if (wtc) {
+                if (!watches[p1]) {
+                  watches[p1] = wtc();
+                }
+                newWatches.push(p1);
               }
-              newWatches.push(p1);
               return (_ref = scope.$parent[p1]) != null ? _ref : p1;
             });
             oldWatches = jQuery.extend({}, watches);
@@ -105,13 +225,12 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
             }
           });
           $wmdInput = $("#wmd-input-" + scope.editorUniqueId);
-          scope.$watch('markdown', function(value, oldValue) {
+          return scope.$watch('markdown', function(value, oldValue) {
             $wmdInput.val(value);
             isPreviewRefresh = true;
             editor.refreshPreview();
             return isPreviewRefresh = false;
           });
-          return intersect = function(x, y) {};
         });
       }
     };
