@@ -243,7 +243,7 @@ module.exports = function (grunt) {
         }, {
           expand: true,
           flatten: true,
-          src: 'app/bower_components/topico-content-editors/img/*',
+          src: 'app/bower_components/topico-content-editors/dist/img/*',
           dest: '<%= yeoman.dist %>/img'
         }]
       }
