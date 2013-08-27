@@ -8,14 +8,21 @@
     "jquery": "~1.9.1",
     "bootstrap-sass": "~2.3.1",
     "es5-shim": "~2.0.8",
-    "pagedown-bootstrap": "Firfi/pagedown-bootstrap#0.0.0"
+    "pagedown-bootstrap": "Firfi/pagedown-bootstrap#0.0.0",
+    "bootstrap-modal": "~2.1.0"
   },
   "devDependencies": {
     "angular-mocks": "~1.0.7",
     "angular-scenario": "~1.0.7"
   },
-  "main": ["topico-content-editors.js", "topico-content-editors.css"],
+  "main": [
+    "dist/scripts/scripts.js",
+    "dist/scripts/plugins.js",
+    "dist/styles/main.css"
+  ],
   "ignore": [
-    "examples", "src", "topico-content-editors-f5dd"
+    "examples",
+    "src",
+    "topico-content-editors-f5dd"
   ]
 }

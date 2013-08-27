@@ -1,15 +1,44 @@
-angular.module('topicoContentEditors', []);
+
 
 /*
 //@ sourceMappingURL=init.js.map
 */
+angular.module("topicoContentEditors", []).run(["$templateCache", function($templateCache) {
+
+  $templateCache.put("editor/includeDialog.html",
+    "<div class=\"modal fade\" id=\"wmd-include-{{ editorUniqueId }}\">\n" +
+    "    <div class=\"modal-header\">\n" +
+    "        <a class=\"close\" data-dismiss=\"modal\">&times;</a>\n" +
+    "        <h3>Modal Header</h3>\n" +
+    "    </div>\n" +
+    "    <div class=\"modal-body\">\n" +
+    "        <p>Test Modal</p>\n" +
+    "    </div>\n" +
+    "    <div class=\"modal-footer\">\n" +
+    "        <a href=\"#\" class=\"btn\" data-dismiss=\"modal\">Close</a>\n" +
+    "        <a href=\"#\" class=\"btn btn-primary\">Save Changes</a>\n" +
+    "    </div>\n" +
+    "</div>"
+  );
+
+  $templateCache.put("main.html",
+    "<div class=\"hero-unit\">\n" +
+    "    <topico-video-embed res=\"youtube\"></topico-video-embed>\n" +
+    "    <textarea ng-model=\"descriptionMarkdown\"></textarea>\n" +
+    "    <textarea ng-model=\"descriptionHtml\"></textarea>\n" +
+    "    <topico-editor markdown=\"descriptionMarkdown\" html=\"descriptionHtml\"></topico-editor>\n" +
+    "</div>\n"
+  );
+
+}]);
+
 'use strict';
 angular.module('topicoContentEditors').directive('topicoEditor', [
-  'topicoCEEditorSvc', 'topicoResourcesSvc', '$compile', '$timeout', '$rootScope', function(topicoCEEditorSvc, topicoResourcesSvc, $compile, $timeout, $rootScope) {
+  'topicoCEEditorSvc', 'topicoResourcesSvc', '$compile', '$timeout', '$templateCache', function(topicoCEEditorSvc, topicoResourcesSvc, $compile, $timeout, $templateCache) {
     var nextId;
     nextId = 0;
     return {
-      template: '<div class="pagedown-bootstrap-editor">\n<div class="wmd-panel">\n  <div id="wmd-button-bar-{{ editorUniqueId }}"></div>\n  <textarea class="wmd-input" id="wmd-input-{{ editorUniqueId }}"></textarea>\n  <div id="wmd-preview-{{ editorUniqueId }}" class="wmd-panel wmd-preview"></div>\n</div>\n</div>',
+      template: '<div class="pagedown-bootstrap-editor">\n<div class="wmd-panel">\n  <div id="wmd-button-bar-{{ editorUniqueId }}"></div>\n  <textarea class="wmd-input" id="wmd-input-{{ editorUniqueId }}"></textarea>\n  <div id="wmd-preview-{{ editorUniqueId }}" class="wmd-panel wmd-preview"></div>\n</div>\n<div ng-include=" \'editor/includeDialog.html\' "></div>\n<a id="{{ includeLinkId }}" style="display: none;" href="#wmd-include-{{ editorUniqueId }}" data-toggle="modal"></a>\n</div>',
       replace: true,
       restrict: 'E',
       scope: {
@@ -17,17 +46,20 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
         html: '='
       },
       link: function(scope, element, attrs) {
-        var doc;
         scope.editorUniqueId = nextId++;
-        doc = window.document;
+        scope.includeLinkId = "wmd-include-link-" + scope.editorUniqueId;
         return $timeout(function() {
-          var $wmdInput, converter, editor, help, intersect, isPreviewRefresh, watches;
+          var $wmdInput, converter, editor, help, includeCallback, intersect, isPreviewRefresh, watches;
           converter = new Markdown.Converter();
           help = function() {
             return alert("Topico markdown editor");
           };
+          includeCallback = function(a, b) {
+            return $('#' + scope.includeLinkId).click();
+          };
           editor = new Markdown.Editor(converter, "-" + scope.editorUniqueId, {
-            handler: help
+            handler: help,
+            includeCallback: includeCallback
           }, {
             buttonBar: element[0].firstElementChild.children[0],
             input: element[0].firstElementChild.children[1],
@@ -226,22 +258,17 @@ angular.module('topicoContentEditors').service('topicoCEVideoSvc', [
 //@ sourceMappingURL=topicoCEVideoSvc.js.map
 */
 angular.module('topicoContentEditors').service('topicoResourcesSvc', function() {
-  var resourceRegistry;
-  resourceRegistry = {
-    first: {
-      id: 'first',
-      markdown: "*my included markdown first*"
-    },
-    second: {
-      id: 'second',
-      markdown: "# my included markdown second"
-    }
-  };
   return {
-    getMarkdown: function(resource) {
-      var id, _ref;
-      id = resource.id || resource;
-      return ((_ref = resourceRegistry[id]) != null ? _ref.markdown : void 0) || id;
+    list: function() {
+      return [
+        {
+          id: 'first',
+          type: 'note'
+        }, {
+          id: 'second',
+          type: 'task'
+        }
+      ];
     }
   };
 });

@@ -1,1 +1,2 @@
-angular.module('topicoContentEditors', []);
+# ngtemplatecache module initialize application instead of this
+# angular.module('topicoContentEditors', []);

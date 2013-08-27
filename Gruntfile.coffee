@@ -12,7 +12,8 @@ module.exports = (grunt) ->
 
   yeomanConfig =
     app: 'src'
-    dist: '.temp'
+    dist: 'dist'
+    temp: '.temp'
 
   try
     yeomanConfig.app = require('./bower.json').appPath || yeomanConfig.app
@@ -37,7 +38,7 @@ module.exports = (grunt) ->
           '<%= yeoman.app %>/{,*/}*.html'
           '{.temp,<%= yeoman.app %>}/styles/{,*/}*.css'
           '{.temp,<%= yeoman.app %>}/scripts/{,*/}*.js'
-          '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
+          '<%= yeoman.app %>/{images,img}/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
         ]
 
     connect:
@@ -49,21 +50,21 @@ module.exports = (grunt) ->
           middleware: (connect) ->
             [
               lrSnippet
-              mountFolder(connect, '.temp')
+              mountFolder(connect, 'dist')
               mountFolder(connect, yeomanConfig.app)
             ]
       test:
         options:
           middleware: (connect) ->
             [
-              mountFolder(connect, '.temp')
+              mountFolder(connect, 'dist')
               mountFolder(connect, 'test')
             ]
       dev:
         options:
           middleware: (connect) ->
             [
-              mountFolder(connect, '.temp')
+              mountFolder(connect, 'dist')
             ]
     open:
       server:
@@ -77,38 +78,36 @@ module.exports = (grunt) ->
           './.temp/views'
           './.temp/'
         ]
-      server: '.temp'
+      server: yeomanConfig.dist
     copy:
-      styles:
-        files: [
-          src: "./.temp/styles/main.css"
-          dest: './css/topico-content-editors.css'
-        ]
       imgsDev:
         files: [
           flatten: true
           expand: true
-          src: "./#{yeomanConfig.app}/bower_components/pagedown-bootstrap/img/*"
-          dest: "./#{yeomanConfig.app}/img/"
+          src: "#{yeomanConfig.app}/bower_components/pagedown-bootstrap/img/*"
+          dest: "#{yeomanConfig.app}/img/"
           filter: 'isFile'
         ]
       imgs:
         files: [
           flatten: true
           expand: true
-          src: "./#{yeomanConfig.app}/img/*"
-          dest: "./img/"
+          src: "#{yeomanConfig.app}/img/*"
+          dest: "#{yeomanConfig.dist}/img"
         ]
-      plugins:
+      views:
         files: [
-          src: "./.temp/scripts/plugins.js"
-          dest: "./topico-content-editors-plugins.js"
+          cwd: "#{yeomanConfig.app}/views"
+          expand: true
+          src: ["**"]
+          dest: "#{yeomanConfig.dist}/views/"
         ]
       pluginsSrc:
         files: [
-          src: "./.temp/scripts/plugins.js"
-          dest: "./topico-content-editors-plugins.src.js"
+          src: "#{yeomanConfig.dist}/scripts/plugins.js"
+          dest: "#{yeomanConfig.dist}/scripts/plugins.src.js"
         ]
+
 
     useminPrepare:
       html: '<%= yeoman.app %>/index.html',
@@ -149,34 +148,44 @@ module.exports = (grunt) ->
     uglify:
     # concat js files before minification
       js:
-        src: ['topico-content-editors.src.js']
-        dest: 'topico-content-editors.js'
+        files: [
+            {
+              src: "#{yeomanConfig.dist}/scripts/scripts.src.js"
+              dest: "#{yeomanConfig.dist}/scripts/scripts.js"
+            }, {
+              src: "#{yeomanConfig.dist}/scripts/plugins.src.js"
+              dest: "#{yeomanConfig.dist}/scripts/plugins.js"
+            }
+          ]
         options:
           banner: '<%= banner %>'
           sourceMap: (fileName) ->
             fileName.replace /\.js$/, '.map'
+          preserveComments: 'all'
+
     concat:
     # concat js files before minification
       js:
         src: ['.temp/scripts/*.js', '.temp/scripts/**/*.js']
-        dest: 'topico-content-editors.src.js'
+        dest: "#{yeomanConfig.dist}/scripts/scripts.src.js"
 
     cssmin:
       css:
         expand: true
         files:
-          'topico-content-editors.css': ['topico-content-editors.css']
+          'main.css': ['main.css']
         options:
           banner: '<%= banner %>'
 
-
-    ngTemplateCache:
-      views:
-        files:
-          './.temp/scripts/views.js': './.temp/topico-content-editors/**/*.html'
+    ngtemplates:
+      topicoContentEditors:
         options:
-          trim: './.temp/'
-          module: 'ngTable'
+          base: "#{yeomanConfig.app}/views"
+          concat: "js"
+          module:
+            define: true
+        src: "#{yeomanConfig.app}/views/{,**/}**.html",
+        dest: "#{yeomanConfig.temp}/scripts/templates.js"
 
     karma:
       unit:
@@ -222,20 +231,19 @@ module.exports = (grunt) ->
     'clean'
     'coffee'
     #'jade'
-    #'ngTemplateCache'
+    'ngtemplates:topicoContentEditors'
     'concat'
     #'less'
     'copy:imgsDev'
     'copy:imgs'
     'copy:pluginsSrc'
+    'copy:views'
   ]
 
   grunt.registerTask 'default', [
     'useminPrepare'
     'dev'
     'uglify'
-    'copy:plugins'
     'cssmin'
     'usemin'
-    'copy:styles'
   ]

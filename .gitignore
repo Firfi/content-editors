@@ -1,5 +1,4 @@
 node_modules
-/dist
 .temp
 .sass-cache
 src/bower_components
@@ -7,3 +6,6 @@ bower_components
 .idea
 topico-content-editors.iml
 .vagrant
+package.box
+libpeerconnection.log
+.DS_Store
