@@ -109,6 +109,7 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
         html: '='
       },
       link: function(scope, element, attrs) {
+        var getResources;
         scope.editorUniqueId = nextId++;
         scope.includeLinkId = "wmd-include-link-" + scope.editorUniqueId;
         scope.editorAreaId = "wmd-input-" + scope.editorUniqueId;
@@ -130,6 +131,14 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
         scope.filters = {
           title: ''
         };
+        getResources = function() {
+          var r, _ref;
+          r = $.map(scope.types, function(type) {
+            return type.resources;
+          });
+          return (_ref = []).concat.apply(_ref, r);
+        };
+        scope.resources = getResources();
         scope.selectedResources = function() {
           var r, _ref;
           r = $.map(scope.selectedTypes(), function(type) {
@@ -145,7 +154,7 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
           return (_ref = []).concat.apply(_ref, r);
         };
         return $timeout(function() {
-          var $wmdInput, converter, editor, editorArea, help, includeCallback, includeLink, isPreviewRefresh, modal, watches;
+          var $wmdInput, converter, editor, editorArea, help, includeCallback, includeLink, isPreviewRefresh, modal, refresh, watches;
           includeLink = $('#' + scope.includeLinkId);
           editorArea = $('#' + scope.editorAreaId);
           modal = $('#' + scope.modalId);
@@ -184,12 +193,18 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
           editor.run();
           isPreviewRefresh = false;
           watches = {};
+          refresh = function() {
+            return $timeout(function() {
+              return editor.refreshPreview();
+            });
+          };
+          scope.$watch('resources', refresh, true);
           converter.hooks.chain("preConversion", function(markdown) {
             var newWatches, oldWatches, ow, resultMd, _i, _len;
             scope.markdown = markdown;
             newWatches = [];
             resultMd = markdown.replace(/{{include (.+?)}}/g, function(str, p1) {
-              var wtc, _ref;
+              var r, wtc, _ref, _ref1;
               p1 = p1.trim();
               wtc = function() {
                 if (scope.$parent[p1]) {
@@ -206,7 +221,7 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
                 }
                 newWatches.push(p1);
               }
-              return (_ref = scope.$parent[p1]) != null ? _ref : p1;
+              return (_ref = (_ref1 = scope.$parent[p1]) != null ? _ref1 : (r = $filter('getById')(scope.resources, p1), (r != null ? r.text : void 0) || (r != null ? r.description : void 0))) != null ? _ref : p1;
             });
             oldWatches = jQuery.extend({}, watches);
             delete oldWatches[newWatches];
@@ -267,6 +282,21 @@ angular.module('topicoContentEditors').directive('topicoVideoEmbed', [
 
 /*
 //@ sourceMappingURL=topicoVideoEmbed.js.map
+*/
+angular.module('topicoContentEditors').filter('getById', function() {
+  return function(input, id) {
+    var o, _i, _len;
+    for (_i = 0, _len = input.length; _i < _len; _i++) {
+      o = input[_i];
+      if (o.id === id) {
+        return o;
+      }
+    }
+  };
+});
+
+/*
+//@ sourceMappingURL=getById.js.map
 */
 'use strict';
 angular.module('topicoContentEditors').service('topicoCEEditorSvc', function() {});

@@ -36,21 +36,31 @@ angular.module('topicoContentEditors')
         scope.editorAreaId = "wmd-input-#{scope.editorUniqueId}"
         scope.modalId = "wmd-include-#{scope.editorUniqueId}"
 
-        scope.types = $.map topicoCETestResourceSvc.resourcesByType, (v, k) ->
-          name: v.type
-          resources: v.resources
-          checked: false
+        scope.types =
+          $.map topicoCETestResourceSvc.resourcesByType, (v, k) ->
+            name: v.type
+            resources: v.resources
+            checked: false
         scope.selectedTypes = ->
           filtered = $filter('filter')(scope.types, {checked: true})
           filtered = if filtered.length > 0 then filtered else scope.types
         scope.filters =
           title: ''
+        getResources = ->
+          r = $.map scope.types, (type) ->
+            type.resources
+          [].concat r...
+        # see watch option here http://stackoverflow.com/questions/11135864/scope-watch-is-not-updating-value-fetched-from-resource-on-custom-directive
+        scope.resources = getResources()
+
+
         scope.selectedResources = ->
           r = $.map scope.selectedTypes(), (type) ->
             if scope.filters.title is '' then type.resources else $filter('filter')(type.resources, (res) ->
               res.title?.toLowerCase()?.indexOf(scope.filters.title.toLowerCase()) is 0
             )
           [].concat r...
+
 
         # this is method to evaluate template so it is accessible through window.document.getElementById().
         # window.document.getElementById() is used inside Markdown library and it doesn't see template elements otherwise.
@@ -69,9 +79,6 @@ angular.module('topicoContentEditors')
 
           help = ->
             alert("Topico markdown editor")
-
-          #tasks = topicoResourcesService.getSpaceTasks() # mutating service state!
-          #console.warn(tasks)
 
           includeCallback = ->
             scope.popupState =
@@ -109,6 +116,10 @@ angular.module('topicoContentEditors')
           isPreviewRefresh = false
 
           watches = {} # night gathers, and now my watch begins
+          refresh = ->
+            $timeout ->
+              editor.refreshPreview()
+          scope.$watch 'resources', refresh, true
 
           converter.hooks.chain("preConversion", (markdown) ->
             scope.markdown = markdown
@@ -127,7 +138,9 @@ angular.module('topicoContentEditors')
                 # log new/and old and not-updated watch
                 newWatches.push p1
 
-              scope.$parent[p1] ? p1
+
+
+              scope.$parent[p1] ? (r = $filter('getById')(scope.resources, p1); (r?.text or r?.description)) ? p1
 
             # remove watches for what {{include ...}} was removed
             oldWatches = jQuery.extend({}, watches) # clone
