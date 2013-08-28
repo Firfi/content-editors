@@ -36,30 +36,30 @@ angular.module('topicoContentEditors')
         scope.editorAreaId = "wmd-input-#{scope.editorUniqueId}"
         scope.modalId = "wmd-include-#{scope.editorUniqueId}"
 
-        scope.types =
-          $.map topicoCETestResourceSvc.resourcesByType, (v, k) ->
-            name: v.type
-            resources: v.resources
-            checked: false
-        scope.selectedTypes = ->
-          filtered = $filter('filter')(scope.types, {checked: true})
-          filtered = if filtered.length > 0 then filtered else scope.types
-        scope.filters =
-          title: ''
-        getResources = ->
-          r = $.map scope.types, (type) ->
-            type.resources
-          [].concat r...
-        # see watch option here http://stackoverflow.com/questions/11135864/scope-watch-is-not-updating-value-fetched-from-resource-on-custom-directive
-        scope.resources = getResources()
-
-
-        scope.selectedResources = ->
-          r = $.map scope.selectedTypes(), (type) ->
-            if scope.filters.title is '' then type.resources else $filter('filter')(type.resources, (res) ->
-              res.title?.toLowerCase()?.indexOf(scope.filters.title.toLowerCase()) is 0
-            )
-          [].concat r...
+        topicoResourcesService.getTasks().then (res) ->
+          scope.types =
+            # TODO change res.topics to something more reliable
+            $.map (_.chain(res.topics).groupBy('type').value()), (v, k) ->
+              name: k
+              resources: v
+              checked: false
+          getResources = ->
+            r = $.map scope.types, (type) ->
+              type.resources
+            [].concat r...
+          # see watch option here http://stackoverflow.com/questions/11135864/scope-watch-is-not-updating-value-fetched-from-resource-on-custom-directive
+          scope.resources = getResources()
+          scope.filters =
+            title: ''
+          scope.selectedTypes = ->
+            filtered = $filter('filter')(scope.types, {checked: true})
+            filtered = if filtered.length > 0 then filtered else scope.types
+          scope.selectedResources = ->
+            r = $.map scope.selectedTypes(), (type) ->
+              if scope.filters.title is '' then type.resources else $filter('filter')(type.resources, (res) ->
+                res.title?.toLowerCase()?.indexOf(scope.filters.title.toLowerCase()) is 0
+              )
+            [].concat r...
 
 
         # this is method to evaluate template so it is accessible through window.document.getElementById().
@@ -79,7 +79,28 @@ angular.module('topicoContentEditors')
 
           help = ->
             alert("Topico markdown editor")
-
+          task = {
+            "type": "Task",
+            "text": "task4 test **text** new api",
+            "priority": 5,
+            "taskStatus": "ACTIVE",
+            "aboutTopicIds": [],
+            "aboutResIds": [],
+            "title": "task4 test new api",
+            "topics": [
+              "tag": "basement",
+              "description": "anything having to do with the basement",
+              "id": "5192e2d00364e8aa1ed3ada8",
+              "aboutTopicIds": [],
+              "aboutResIds": [],
+              "title": "Basement",
+              "topics": [],
+              "nonTopicAbouts": [],
+              "statements": []
+            ],
+            "nonTopicAbouts": [],
+            "statements": []
+          }
           includeCallback = ->
             scope.popupState =
               # this sort of state refreshes every call to popup
@@ -116,10 +137,6 @@ angular.module('topicoContentEditors')
           isPreviewRefresh = false
 
           watches = {} # night gathers, and now my watch begins
-          refresh = ->
-            $timeout ->
-              editor.refreshPreview()
-          scope.$watch 'resources', refresh, true
 
           converter.hooks.chain("preConversion", (markdown) ->
             scope.markdown = markdown

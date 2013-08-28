@@ -131,8 +131,6 @@ module.exports = (grunt) ->
           ext: '.js'
         ]
         options:
-        # Don't include a surrounding Immediately-Invoked Function Expression (IIFE) in the compiled output.
-        # For more information on IIFEs, please visit http://benalman.com/news/2010/11/immediately-invoked-function-expression/
           bare: true
           sourceMap: true
           sourceRoot : '/src'
