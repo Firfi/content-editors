@@ -7,3 +7,5 @@ Object.prototype.without = ->
   for a in arguments
     delete r[a]
   r
+
+jasmine.getJSONFixtures().fixturesPath = '/test/spec/fixtures' # base path is set in karma.conf.js

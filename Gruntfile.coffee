@@ -174,12 +174,17 @@ module.exports = (grunt) ->
           banner: '<%= banner %>'
 
     ngtemplates:
-      topicoContentEditors:
+      dist:
         options:
           base: "#{yeomanConfig.app}/views"
           concat: "js"
-          module:
-            define: false
+          module: 'topicoContentEditors'
+        src: "#{yeomanConfig.app}/views/{,**/}**.html",
+        dest: "#{yeomanConfig.temp}/scripts/templates.js"
+      test:
+        options:
+          base: "#{yeomanConfig.app}/views"
+          module: 'topicoContentEditors'
         src: "#{yeomanConfig.app}/views/{,**/}**.html",
         dest: "#{yeomanConfig.temp}/scripts/templates.js"
 
@@ -220,6 +225,9 @@ module.exports = (grunt) ->
   grunt.registerTask 'test', [
     'coffee:test'
     'connect:test'
+    'ngtemplates:test'
+    'useminPrepare' # for karma dependencies
+    'concat:js' # same
     'karma'
   ]
 
@@ -227,7 +235,7 @@ module.exports = (grunt) ->
     'clean'
     'coffee'
     #'jade'
-    'ngtemplates:topicoContentEditors'
+    'ngtemplates:dist'
     'concat'
     #'less'
     'copy:imgsDev'

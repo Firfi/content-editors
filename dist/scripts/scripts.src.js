@@ -156,37 +156,13 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
           };
         });
         return $timeout(function() {
-          var $wmdInput, converter, editor, editorArea, help, includeCallback, includeLink, isPreviewRefresh, modal, task, watches;
+          var $wmdInput, converter, editor, editorArea, help, includeCallback, includeLink, isPreviewRefresh, modal, watches;
           includeLink = $('#' + scope.includeLinkId);
           editorArea = $('#' + scope.editorAreaId);
           modal = $('#' + scope.modalId);
           converter = new Markdown.Converter();
           help = function() {
             return alert("Topico markdown editor");
-          };
-          task = {
-            "type": "Task",
-            "text": "task4 test **text** new api",
-            "priority": 5,
-            "taskStatus": "ACTIVE",
-            "aboutTopicIds": [],
-            "aboutResIds": [],
-            "title": "task4 test new api",
-            "topics": [
-              {
-                "tag": "basement",
-                "description": "anything having to do with the basement",
-                "id": "5192e2d00364e8aa1ed3ada8",
-                "aboutTopicIds": [],
-                "aboutResIds": [],
-                "title": "Basement",
-                "topics": [],
-                "nonTopicAbouts": [],
-                "statements": []
-              }
-            ],
-            "nonTopicAbouts": [],
-            "statements": []
           };
           includeCallback = function() {
             scope.popupState = {

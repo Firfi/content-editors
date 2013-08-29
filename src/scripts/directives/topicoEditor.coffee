@@ -79,28 +79,7 @@ angular.module('topicoContentEditors')
 
           help = ->
             alert("Topico markdown editor")
-          task = {
-            "type": "Task",
-            "text": "task4 test **text** new api",
-            "priority": 5,
-            "taskStatus": "ACTIVE",
-            "aboutTopicIds": [],
-            "aboutResIds": [],
-            "title": "task4 test new api",
-            "topics": [
-              "tag": "basement",
-              "description": "anything having to do with the basement",
-              "id": "5192e2d00364e8aa1ed3ada8",
-              "aboutTopicIds": [],
-              "aboutResIds": [],
-              "title": "Basement",
-              "topics": [],
-              "nonTopicAbouts": [],
-              "statements": []
-            ],
-            "nonTopicAbouts": [],
-            "statements": []
-          }
+
           includeCallback = ->
             scope.popupState =
               # this sort of state refreshes every call to popup
