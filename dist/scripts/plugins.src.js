@@ -7031,8 +7031,14 @@ angular.module('topicoAngularServiceApp').factory('topicoResourcesService', [
           deferred.reject('Request failed: status=' + status + ', data=' + data + ', url=' + svcUrl);
         }).success(function (res) {
           sid = res.spaceId;
-          var topics_data = res.resourcesByType[0] ? res.resourcesByType[0].resources : [];
-          var tasks_data = res.resourcesByType[1] ? res.resourcesByType[1].resources : [];
+          var topics_data = [];
+          var tasks_data = [];
+          if (res.resourcesByType.length == 1) {
+            tasks_data = res.resourcesByType[0] ? res.resourcesByType[0].resources : [];
+          } else {
+            topics_data = res.resourcesByType[0] ? res.resourcesByType[0].resources : [];
+            tasks_data = res.resourcesByType[1] ? res.resourcesByType[1].resources : [];
+          }
           for (var i = 0; i < topics_data.length; i++) {
             topics_data[i].tasks = [];
             topics_data[i].subTopics = [];

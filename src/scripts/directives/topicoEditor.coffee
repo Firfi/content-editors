@@ -37,9 +37,9 @@ angular.module('topicoContentEditors')
         scope.modalId = "wmd-include-#{scope.editorUniqueId}"
 
         topicoResourcesService.getTasks().then (res) ->
+
           scope.types =
-            # TODO change res.topics to something more reliable
-            $.map (_.chain(res.topics).groupBy('type').value()), (v, k) ->
+            _.map (_.chain(res.tasks).groupBy('type').value()), (v, k) ->
               name: k
               resources: v
               checked: false
@@ -52,13 +52,13 @@ angular.module('topicoContentEditors')
           scope.filters =
             title: ''
           scope.selectedTypes = ->
-            filtered = $filter('filter')(scope.types, {checked: true})
+            filtered = _.select scope.types, (t) ->
+              t.checked is true
             filtered = if filtered.length > 0 then filtered else scope.types
           scope.selectedResources = ->
-            r = $.map scope.selectedTypes(), (type) ->
-              if scope.filters.title is '' then type.resources else $filter('filter')(type.resources, (res) ->
-                res.title?.toLowerCase()?.indexOf(scope.filters.title.toLowerCase()) is 0
-              )
+            r = _.map scope.selectedTypes(), (type) ->
+              if scope.filters.title is '' then type.resources else _.select type.resources, (res) ->
+                res.title?.toLowerCase()?.indexOf(scope.filters.title.toLowerCase()) isnt -1
             [].concat r...
 
 
@@ -80,7 +80,7 @@ angular.module('topicoContentEditors')
           help = ->
             alert("Topico markdown editor")
 
-          includeCallback = ->
+          scope.includeCallback = ->
             scope.popupState =
               # this sort of state refreshes every call to popup
               carret: editorArea.getCursorPosition()
@@ -94,6 +94,7 @@ angular.module('topicoContentEditors')
             start = text.substring(0, cursor)
             end = text.substring(cursor, text.length)
             newText = "#{start}{{include #{id}}}#{end}"
+            scope.popupState.text = newText
             editorArea.val(newText)
             $timeout ->
               editor.refreshPreview()
@@ -102,7 +103,7 @@ angular.module('topicoContentEditors')
           # elements is for correct unit tests
           editor = new Markdown.Editor(converter, "-"+scope.editorUniqueId, {
             handler: help
-            includeCallback: includeCallback
+            includeCallback: scope.includeCallback
           }, {
             buttonBar: element[0].firstElementChild.children[0]
             input: element[0].firstElementChild.children[1]

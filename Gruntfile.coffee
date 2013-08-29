@@ -223,11 +223,12 @@ module.exports = (grunt) ->
       ]
 
   grunt.registerTask 'test', [
+    'coffee:scripts'
     'coffee:test'
     'connect:test'
     'ngtemplates:test'
     'useminPrepare' # for karma dependencies
-    'concat:js' # same
+    'concat' # same
     'karma'
   ]
 

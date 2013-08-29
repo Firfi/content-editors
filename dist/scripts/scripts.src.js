@@ -115,7 +115,7 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
         scope.modalId = "wmd-include-" + scope.editorUniqueId;
         topicoResourcesService.getTasks().then(function(res) {
           var getResources;
-          scope.types = $.map(_.chain(res.topics).groupBy('type').value(), function(v, k) {
+          scope.types = _.map(_.chain(res.tasks).groupBy('type').value(), function(v, k) {
             return {
               name: k,
               resources: v,
@@ -135,20 +135,20 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
           };
           scope.selectedTypes = function() {
             var filtered;
-            filtered = $filter('filter')(scope.types, {
-              checked: true
+            filtered = _.select(scope.types, function(t) {
+              return t.checked === true;
             });
             return filtered = filtered.length > 0 ? filtered : scope.types;
           };
           return scope.selectedResources = function() {
             var r, _ref;
-            r = $.map(scope.selectedTypes(), function(type) {
+            r = _.map(scope.selectedTypes(), function(type) {
               if (scope.filters.title === '') {
                 return type.resources;
               } else {
-                return $filter('filter')(type.resources, function(res) {
+                return _.select(type.resources, function(res) {
                   var _ref, _ref1;
-                  return ((_ref = res.title) != null ? (_ref1 = _ref.toLowerCase()) != null ? _ref1.indexOf(scope.filters.title.toLowerCase()) : void 0 : void 0) === 0;
+                  return ((_ref = res.title) != null ? (_ref1 = _ref.toLowerCase()) != null ? _ref1.indexOf(scope.filters.title.toLowerCase()) : void 0 : void 0) !== -1;
                 });
               }
             });
@@ -156,7 +156,7 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
           };
         });
         return $timeout(function() {
-          var $wmdInput, converter, editor, editorArea, help, includeCallback, includeLink, isPreviewRefresh, modal, watches;
+          var $wmdInput, converter, editor, editorArea, help, includeLink, isPreviewRefresh, modal, watches;
           includeLink = $('#' + scope.includeLinkId);
           editorArea = $('#' + scope.editorAreaId);
           modal = $('#' + scope.modalId);
@@ -164,7 +164,7 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
           help = function() {
             return alert("Topico markdown editor");
           };
-          includeCallback = function() {
+          scope.includeCallback = function() {
             scope.popupState = {
               carret: editorArea.getCursorPosition(),
               text: editorArea.val()
@@ -178,6 +178,7 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
             start = text.substring(0, cursor);
             end = text.substring(cursor, text.length);
             newText = "" + start + "{{include " + id + "}}" + end;
+            scope.popupState.text = newText;
             editorArea.val(newText);
             $timeout(function() {
               return editor.refreshPreview();
@@ -186,7 +187,7 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
           };
           editor = new Markdown.Editor(converter, "-" + scope.editorUniqueId, {
             handler: help,
-            includeCallback: includeCallback
+            includeCallback: scope.includeCallback
           }, {
             buttonBar: element[0].firstElementChild.children[0],
             input: element[0].firstElementChild.children[1],

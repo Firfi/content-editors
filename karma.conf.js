@@ -7,16 +7,16 @@ basePath = '';
 files = [
   JASMINE,
   JASMINE_ADAPTER,
+  'src/bower_components/jquery/jquery.js',
   'src/bower_components/angular/angular.js',
   'src/bower_components/angular-mocks/angular-mocks.js',
-  'src/bower_components/jquery/jquery.js',
 
   'src/bower_components/jasmine-query/lib/jasmine-jquery.js',
 
   'dist/scripts/plugins.src.js',
 
-  '.temp/scripts/*.js',
-  '.temp/scripts/*/*.js',
+  'dist/scripts/scripts.src.js',
+
   '.temp/mock/**/*.js',
   '.temp/spec/**/*.js'
 ];
