@@ -44,7 +44,7 @@ angular.module("topicoContentEditors").run(["$templateCache", function($template
     "        </div>\n" +
     "        <table class=\"table table-striped table-bordered table-condensed resources-popup-table\">\n" +
     "            <tr ng-repeat=\"resource in selectedResources()\" ng-click=\"includeResource(resource.id)\">\n" +
-    "                <td>{{ resource.type }}</td>\n" +
+    "                <td>{{ schemaOrType(resource) }}</td>\n" +
     "                <td>{{ resource.title }}</td>\n" +
     "            </tr>\n" +
     "        </table>\n" +
@@ -109,13 +109,19 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
         html: '='
       },
       link: function(scope, element, attrs) {
+        var api;
         scope.editorUniqueId = nextId++;
         scope.includeLinkId = "wmd-include-link-" + scope.editorUniqueId;
         scope.editorAreaId = "wmd-input-" + scope.editorUniqueId;
         scope.modalId = "wmd-include-" + scope.editorUniqueId;
+        api = null;
         topicoResourcesService.getTasks().then(function(res) {
           var getResources;
-          scope.types = _.map(_.chain(res.tasks).groupBy('type').value(), function(v, k) {
+          api = res;
+          scope.schemaOrType = function(o) {
+            return o.resSchemaName || o.type;
+          };
+          scope.types = _.map(_.chain($.extend(res.tasks, res.topics)).groupBy(scope.schemaOrType).value(), function(v, k) {
             return {
               name: k,
               resources: v,
@@ -156,13 +162,30 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
           };
         });
         return $timeout(function() {
-          var $wmdInput, converter, editor, editorArea, help, includeLink, isPreviewRefresh, modal, watches;
+          var $wmdInput, converter, editor, editorArea, help, includeLink, isPreviewRefresh, modal, topic, watches;
           includeLink = $('#' + scope.includeLinkId);
           editorArea = $('#' + scope.editorAreaId);
           modal = $('#' + scope.modalId);
           converter = new Markdown.Converter();
           help = function() {
             return alert("Topico markdown editor");
+          };
+          topic = {
+            "type": "Res",
+            "resSchemaName": "Topic",
+            "tag": "groovy",
+            "description": "Test topic 2",
+            "aboutTopicIds": [],
+            "aboutResIds": [],
+            "title": "Test topic 2",
+            "topics": [],
+            "nonTopicAbouts": [],
+            "statements": [
+              {
+                "predicate": "IS_ABOUT",
+                "objectId": "518d3cd70cf27f0e99132475"
+              }
+            ]
           };
           scope.includeCallback = function() {
             scope.popupState = {

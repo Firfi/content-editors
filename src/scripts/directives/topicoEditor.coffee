@@ -36,10 +36,14 @@ angular.module('topicoContentEditors')
         scope.editorAreaId = "wmd-input-#{scope.editorUniqueId}"
         scope.modalId = "wmd-include-#{scope.editorUniqueId}"
 
-        topicoResourcesService.getTasks().then (res) ->
+        api = null
 
+        topicoResourcesService.getTasks().then (res) ->
+          api = res
+          scope.schemaOrType = (o) ->
+            o.resSchemaName || o.type
           scope.types =
-            _.map (_.chain(res.tasks).groupBy('type').value()), (v, k) ->
+            _.map (_.chain($.extend(res.tasks, res.topics)).groupBy(scope.schemaOrType).value()), (v, k) ->
               name: k
               resources: v
               checked: false
@@ -80,7 +84,24 @@ angular.module('topicoContentEditors')
           help = ->
             alert("Topico markdown editor")
 
+          topic = {
+            "type": "Res",
+            "resSchemaName": "Topic"
+            "tag": "groovy",
+            "description": "Test topic 2",
+            "aboutTopicIds": [],
+            "aboutResIds": [],
+            "title": "Test topic 2",
+            "topics": [],
+            "nonTopicAbouts": [],
+            "statements": [
+              "predicate": "IS_ABOUT",
+              "objectId": "518d3cd70cf27f0e99132475"
+            ]
+          }
+
           scope.includeCallback = ->
+           # api.saveTopic([],topic)
             scope.popupState =
               # this sort of state refreshes every call to popup
               carret: editorArea.getCursorPosition()

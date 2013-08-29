@@ -7015,233 +7015,236 @@ angular.module('topicoAngularServiceApp').factory('topicoResourcesService', [
         return taskBaseUrl;
       }
     };
-    return {
-      getTasks: function (theSpaceId) {
-        var deferred = $q.defer();
-        var svcUrl = getSvcUrl(theSpaceId);
-        var topics = [];
-        var sid = null;
-        var tasks = [];
-        var mainTopics = [];
-        $http({
-          method: 'GET',
-          withCredentials: true,
-          url: svcUrl
-        }).error(function (data, status) {
-          deferred.reject('Request failed: status=' + status + ', data=' + data + ', url=' + svcUrl);
-        }).success(function (res) {
-          sid = res.spaceId;
-          var topics_data = [];
-          var tasks_data = [];
-          if (res.resourcesByType.length == 1) {
-            tasks_data = res.resourcesByType[0] ? res.resourcesByType[0].resources : [];
-          } else {
-            topics_data = res.resourcesByType[0] ? res.resourcesByType[0].resources : [];
-            tasks_data = res.resourcesByType[1] ? res.resourcesByType[1].resources : [];
-          }
-          for (var i = 0; i < topics_data.length; i++) {
-            topics_data[i].tasks = [];
-            topics_data[i].subTopics = [];
-            topics_data[i].parent = null;
-            topics.push(topics_data[i]);
-            if (topics_data[i].statements.length == 0) {
-              mainTopics.push(topics_data[i]);
+    var result = {
+        getTasks: function (theSpaceId) {
+          var deferred = $q.defer();
+          var svcUrl = getSvcUrl(theSpaceId);
+          var topics = [];
+          var sid = null;
+          var tasks = [];
+          var mainTopics = [];
+          $http({
+            method: 'GET',
+            withCredentials: true,
+            url: svcUrl
+          }).error(function (data, status) {
+            deferred.reject('Request failed: status=' + status + ', data=' + data + ', url=' + svcUrl);
+          }).success(function (res) {
+            sid = res.spaceId;
+            var topics_data = [];
+            var tasks_data = [];
+            if (res.resourcesByType.length == 1) {
+              tasks_data = res.resourcesByType[0] ? res.resourcesByType[0].resources : [];
+            } else {
+              topics_data = res.resourcesByType[0] ? res.resourcesByType[0].resources : [];
+              tasks_data = res.resourcesByType[1] ? res.resourcesByType[1].resources : [];
             }
-          }
-          for (var i = 0; i < topics.length; i++) {
-            for (var j = 0; j < topics[i].statements.length; j++) {
-              var topic = getTopic(topics[i].statements[j].objectId);
-              topic.subTopics.push(topics[i]);
-              topics[i].parent = topic.id;
-            }
-          }
-          for (var i = 0; i < tasks_data.length; i++) {
-            tasks_data[i].subTasks = [];
-            tasks.push(tasks_data[i]);
-          }
-          for (var i = 0; i < tasks_data.length; i++) {
-            for (var j = 0; j < tasks_data[i].statements.length; j++) {
-              if (tasks_data[i].statements[j].predicate == 'IS_ABOUT') {
-                var topic = getTopic(tasks_data[i].statements[j].objectId);
-                pushTask(topic, tasks_data[i]);
+            for (var i = 0; i < topics_data.length; i++) {
+              topics_data[i].tasks = [];
+              topics_data[i].subTopics = [];
+              topics_data[i].parent = null;
+              topics.push(topics_data[i]);
+              if (topics_data[i].statements.length == 0) {
+                mainTopics.push(topics_data[i]);
               }
             }
-          }
-          for (var i = 0; i < tasks_data.length; i++) {
-            if (tasks_data[i].statements.length != 0) {
-              if (getTask(tasks_data[i].id) != null) {
-                for (var j = 0; j < tasks_data[i].statements.length; j++) {
-                  if (tasks_data[i].statements[j].predicate == 'HAS_PARENT_TASK') {
-                    var task = getTask(tasks_data[i].statements[j].objectId);
-                    task.subTasks.push(tasks_data[i]);
-                    tasks_data[i].parent = task.id;
+            for (var i = 0; i < topics.length; i++) {
+              for (var j = 0; j < topics[i].statements.length; j++) {
+                var topic = getTopic(topics[i].statements[j].objectId);
+                if (topic) {
+                  topic.subTopics.push(topics[i]);
+                  topics[i].parent = topic.id;
+                }
+              }
+            }
+            for (var i = 0; i < tasks_data.length; i++) {
+              tasks_data[i].subTasks = [];
+              tasks.push(tasks_data[i]);
+            }
+            for (var i = 0; i < tasks_data.length; i++) {
+              for (var j = 0; j < tasks_data[i].statements.length; j++) {
+                if (tasks_data[i].statements[j].predicate == 'IS_ABOUT') {
+                  var topic = getTopic(tasks_data[i].statements[j].objectId);
+                  pushTask(topic, tasks_data[i]);
+                }
+              }
+            }
+            for (var i = 0; i < tasks_data.length; i++) {
+              if (tasks_data[i].statements.length != 0) {
+                if (getTask(tasks_data[i].id) != null) {
+                  for (var j = 0; j < tasks_data[i].statements.length; j++) {
+                    if (tasks_data[i].statements[j].predicate == 'HAS_PARENT_TASK') {
+                      var task = getTask(tasks_data[i].statements[j].objectId);
+                      task.subTasks.push(tasks_data[i]);
+                      tasks_data[i].parent = task.id;
+                    }
                   }
                 }
               }
             }
-          }
-          var self = this;
-          deferred.resolve({
-            'spaceId': sid,
-            'topics': topics,
-            'tasks': tasks,
-            'mainTopics': mainTopics,
-            saveTask: function (topic, task, parent, selectedTask) {
-              self.saveTask(topic, task, parent, selectedTask, sid);
-            },
-            saveTopic: function (topicsList, topic, parent, mainTopicFlag) {
-              self.saveTopic(topicsList, topic, parent, mainTopicFlag, sid);
+            var self = result;
+            deferred.resolve({
+              'spaceId': sid,
+              'topics': topics,
+              'tasks': tasks,
+              'mainTopics': mainTopics,
+              saveTask: function (topic, task, parent, selectedTask) {
+                self.saveTask(topic, task, parent, selectedTask, sid);
+              },
+              saveTopic: function (topicsList, topic, parent, mainTopicFlag) {
+                self.saveTopic(topicsList, topic, parent, mainTopicFlag, sid);
+              }
+            });
+          });
+          return deferred.promise;
+        },
+        getSpaceTasks: function (theSpaceId) {
+          var svcUrl = getSvcUrl(theSpaceId);
+          $http({
+            method: 'GET',
+            withCredentials: true,
+            url: svcUrl
+          }).error(function (data, status) {
+            $log.error('Request failed: status=' + status + ', data=' + data + ', url=' + svcUrl);
+          }).success(function (res) {
+            $log.info('Success call to service ' + svcUrl + ': ' + res);
+            spaceId = res.spaceId;
+            var topics_data = [];
+            var tasks_data = [];
+            for (var i = 0; i < res.resourcesByType.length; i++) {
+              if (res.resourcesByType[i].type === 'Topic') {
+                topics_data = res.resourcesByType[i].resources;
+              } else if (res.resourcesByType[i].type === 'Task') {
+                tasks_data = res.resourcesByType[i].resources;
+              }
+            }
+            for (var i = 0; i < topics_data.length; i++) {
+              topics_data[i].tasks = [];
+              topics_data[i].subTopics = [];
+              topics_data[i].parent = null;
+              topics.push(topics_data[i]);
+              var mainFlag = true;
+              for (var j = 0; j < topics_data[i].statements.length && mainFlag; j++) {
+                if (topics_data[i].statements[j].predicate == 'IS_ABOUT') {
+                  mainFlag = false;
+                }
+              }
+              if (mainFlag) {
+                mainTopics.push(topics_data[i]);
+              }
+            }
+            for (var i = 0; i < topics.length; i++) {
+              for (var j = 0; j < topics[i].statements.length; j++) {
+                var topic = getTopic(topics[i].statements[j].objectId);
+                topic.subTopics.push(topics[i]);
+                topics[i].parent = topic.id;
+              }
+            }
+            for (var i = 0; i < tasks_data.length; i++) {
+              tasks_data[i].subTasks = [];
+              tasks.push(tasks_data[i]);
+            }
+            for (var i = 0; i < tasks_data.length; i++) {
+              for (var j = 0; j < tasks_data[i].statements.length; j++) {
+                if (tasks_data[i].statements[j].predicate == 'IS_ABOUT') {
+                  var topic = getTopic(tasks_data[i].statements[j].objectId);
+                  pushTask(topic, tasks_data[i]);
+                }
+              }
+            }
+            for (var i = 0; i < tasks_data.length; i++) {
+              if (tasks_data[i].statements.length != 0) {
+                if (getTask(tasks_data[i].id) != null)
+                  for (var j = 0; j < tasks_data[i].statements.length; j++) {
+                    if (tasks_data[i].statements[j].predicate == 'HAS_PARENT_TASK') {
+                      var task = getTask(tasks_data[i].statements[j].objectId);
+                      task.subTasks.push(tasks_data[i]);
+                      tasks_data[i].parent = task.id;
+                    }
+                  }
+              }
             }
           });
-        });
-        return deferred.promise;
-      },
-      getSpaceTasks: function (theSpaceId) {
-        var svcUrl = getSvcUrl(theSpaceId);
-        $http({
-          method: 'GET',
-          withCredentials: true,
-          url: svcUrl
-        }).error(function (data, status) {
-          $log.error('Request failed: status=' + status + ', data=' + data + ', url=' + svcUrl);
-        }).success(function (res) {
-          $log.info('Success call to service ' + svcUrl + ': ' + res);
-          spaceId = res.spaceId;
-          var topics_data = [];
-          var tasks_data = [];
-          for (var i = 0; i < res.resourcesByType.length; i++) {
-            if (res.resourcesByType[i].type === 'Topic') {
-              topics_data = res.resourcesByType[i].resources;
-            } else if (res.resourcesByType[i].type === 'Task') {
-              tasks_data = res.resourcesByType[i].resources;
-            }
-          }
-          for (var i = 0; i < topics_data.length; i++) {
-            topics_data[i].tasks = [];
-            topics_data[i].subTopics = [];
-            topics_data[i].parent = null;
-            topics.push(topics_data[i]);
-            var mainFlag = true;
-            for (var j = 0; j < topics_data[i].statements.length && mainFlag; j++) {
-              if (topics_data[i].statements[j].predicate == 'IS_ABOUT') {
-                mainFlag = false;
-              }
-            }
-            if (mainFlag) {
-              mainTopics.push(topics_data[i]);
-            }
-          }
-          for (var i = 0; i < topics.length; i++) {
-            for (var j = 0; j < topics[i].statements.length; j++) {
-              var topic = getTopic(topics[i].statements[j].objectId);
-              topic.subTopics.push(topics[i]);
-              topics[i].parent = topic.id;
-            }
-          }
-          for (var i = 0; i < tasks_data.length; i++) {
-            tasks_data[i].subTasks = [];
-            tasks.push(tasks_data[i]);
-          }
-          for (var i = 0; i < tasks_data.length; i++) {
-            for (var j = 0; j < tasks_data[i].statements.length; j++) {
-              if (tasks_data[i].statements[j].predicate == 'IS_ABOUT') {
-                var topic = getTopic(tasks_data[i].statements[j].objectId);
-                pushTask(topic, tasks_data[i]);
-              }
-            }
-          }
-          for (var i = 0; i < tasks_data.length; i++) {
-            if (tasks_data[i].statements.length != 0) {
-              if (getTask(tasks_data[i].id) != null)
-                for (var j = 0; j < tasks_data[i].statements.length; j++) {
-                  if (tasks_data[i].statements[j].predicate == 'HAS_PARENT_TASK') {
-                    var task = getTask(tasks_data[i].statements[j].objectId);
-                    task.subTasks.push(tasks_data[i]);
-                    tasks_data[i].parent = task.id;
-                  }
-                }
-            }
-          }
-        });
-        return {
-          'spaceId': spaceId,
-          'topics': topics,
-          'tasks': tasks,
-          'mainTopics': mainTopics
-        };
-      },
-      saveTask: function (topic, task, parent, selectedTask, theSpaceId) {
-        var sid = theSpaceId || spaceId;
-        var url = 'http://198.61.168.204:8080/topicoGrails/rest/resource/' + sid + '/';
-        if (task.id == null)
-          url += 'new';
-        else
-          url += task.id;
-        $http({
-          method: 'POST',
-          withCredentials: true,
-          url: url,
-          data: task
-        }).success(function (data, status, headers, config) {
-          if (task.id == null) {
-            data.subTasks = [];
-            data.parent = parent;
-          }
-          if (getIndex(topic.tasks, data.id) == -1) {
-            pushTask(topic, data);
-          }
-          if (selectedTask != null) {
-            if (getIndex(selectedTask.subTasks, data.id) == -1) {
-              selectedTask.subTasks.push(data);
-            }
-          }
-          if (getIndex(tasks, data.id) == -1) {
-            tasks.push(data);
-          }
-        }).error(function (data, status, headers, config) {
-          alert('fail to save task ' + status);
-        });
-      },
-      saveTopic: function (topicsList, topic, parent, mainTopicFlag, theSpaceId) {
-        var sid = theSpaceId || spaceId;
-        var url = 'http://198.61.168.204:8080/topicoGrails/rest/resource/' + sid + '/';
-        if (topic.id == null)
-          url += 'new';
-        else
-          url += topic.id;
-        $http({
-          method: 'POST',
-          withCredentials: true,
-          url: url,
-          data: topic
-        }).success(function (data, status, headers, config) {
-          var containsFlag = false;
-          for (var i = 0; i < topicsList.length; i++) {
-            if (topicsList[i].id == data.id)
-              containsFlag = true;
-          }
-          if (containsFlag == false) {
-            if (topic.id == null) {
-              data.tasks = [];
-              data.subTopics = [];
+          return {
+            'spaceId': spaceId,
+            'topics': topics,
+            'tasks': tasks,
+            'mainTopics': mainTopics
+          };
+        },
+        saveTask: function (topic, task, parent, selectedTask, theSpaceId) {
+          var sid = theSpaceId || spaceId;
+          var url = 'http://198.61.168.204:8080/topicoGrails/rest/resource/' + sid + '/';
+          if (task.id == null)
+            url += 'new';
+          else
+            url += task.id;
+          $http({
+            method: 'POST',
+            withCredentials: true,
+            url: url,
+            data: task
+          }).success(function (data, status, headers, config) {
+            if (task.id == null) {
+              data.subTasks = [];
               data.parent = parent;
             }
-            topicsList.push(data);
-          }
-          if (mainTopicFlag) {
-            if (getIndex(mainTopics, data.id) == -1) {
-              mainTopics.push(data);
+            if (getIndex(topic.tasks, data.id) == -1) {
+              pushTask(topic, data);
             }
-          } else {
-            if (getIndex(topics, data.id) == -1) {
-              topics.push(data);
+            if (selectedTask != null) {
+              if (getIndex(selectedTask.subTasks, data.id) == -1) {
+                selectedTask.subTasks.push(data);
+              }
             }
-          }
-        }).error(function (data, status, headers, config) {
-          alert('fail to save topic ' + status);
-        });
-      }
-    };
+            if (getIndex(tasks, data.id) == -1) {
+              tasks.push(data);
+            }
+          }).error(function (data, status, headers, config) {
+            alert('fail to save task ' + status);
+          });
+        },
+        saveTopic: function (topicsList, topic, parent, mainTopicFlag, theSpaceId) {
+          var sid = theSpaceId || spaceId;
+          var url = 'http://198.61.168.204:8080/topicoGrails/rest/resource/' + sid + '/';
+          if (topic.id == null)
+            url += 'new';
+          else
+            url += topic.id;
+          $http({
+            method: 'POST',
+            withCredentials: true,
+            url: url,
+            data: topic
+          }).success(function (data, status, headers, config) {
+            var containsFlag = false;
+            for (var i = 0; i < topicsList.length; i++) {
+              if (topicsList[i].id == data.id)
+                containsFlag = true;
+            }
+            if (containsFlag == false) {
+              if (topic.id == null) {
+                data.tasks = [];
+                data.subTopics = [];
+                data.parent = parent;
+              }
+              topicsList.push(data);
+            }
+            if (mainTopicFlag) {
+              if (getIndex(mainTopics, data.id) == -1) {
+                mainTopics.push(data);
+              }
+            } else {
+              if (getIndex(topics, data.id) == -1) {
+                topics.push(data);
+              }
+            }
+          }).error(function (data, status, headers, config) {
+            alert('fail to save topic ' + status);
+          });
+        }
+      };
+    return result;
   }
 ]);
 'use strict';

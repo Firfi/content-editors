@@ -20,7 +20,7 @@
         </div>
         <table class="table table-striped table-bordered table-condensed resources-popup-table">
             <tr ng-repeat="resource in selectedResources()" ng-click="includeResource(resource.id)">
-                <td>{{ resource.type }}</td>
+                <td>{{ schemaOrType(resource) }}</td>
                 <td>{{ resource.title }}</td>
             </tr>
         </table>
