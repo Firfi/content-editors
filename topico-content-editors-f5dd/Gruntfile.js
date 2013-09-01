@@ -291,6 +291,11 @@ module.exports = function (grunt) {
           ]
         }
       }
+    },
+    bower: {
+      target: {
+        rjsConfig: 'app/rjs.js'
+      }
     }
   });
 
@@ -316,6 +321,7 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('build', [
+    'bower',
     'clean:dist',
     'useminPrepare',
     'concurrent:dist',

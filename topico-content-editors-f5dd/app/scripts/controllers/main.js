@@ -24,7 +24,7 @@ angular.module('topicoContentEditorsF5ddApp')
     $scope.vimeo = {
       "type": "Res",
       "desc": "<p><a href=\"http://vimeo.com/71336599\">The Thing About Dogs</a> from <a href=\"http://vimeo.com/danielkoren\">Daniel Koren</a> on <a href=\"https://vimeo.com\">Vimeo</a>.",
-       "sourceId": "71336599",
+      "sourceId": "71336599",
       "subType": "Vimeo",
       "url": "http://vimeo.com/71336599",
       "resSchemaName": "VIDEO",

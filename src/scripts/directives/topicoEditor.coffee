@@ -9,8 +9,7 @@ angular.module('topicoContentEditors')
     '$templateCache',
     '$filter'
     'topicoResourcesService',
-    'topicoCETestResourceSvc'
-    (topicoCEEditorSvc, topicoResourcesSvc, $compile, $timeout, $templateCache, $filter, topicoResourcesService, topicoCETestResourceSvc) ->
+    (topicoCEEditorSvc, topicoResourcesSvc, $compile, $timeout, $templateCache, $filter, topicoResourcesService) ->
 
       nextId = 0;
 
@@ -68,7 +67,6 @@ angular.module('topicoContentEditors')
 
         # this is method to evaluate template so it is accessible through window.document.getElementById().
         # window.document.getElementById() is used inside Markdown library and it doesn't see template elements otherwise.
-        # Other way to do it is wrap all function in $timeout but it is supposed to be error-prone.
         # Approach in https://github.com/programmieraffe/angular-editors doesn't work with tests but only in browser
         $timeout ->
 
@@ -76,9 +74,6 @@ angular.module('topicoContentEditors')
           editorArea = $('#'+scope.editorAreaId)
           modal = $('#'+scope.modalId)
 
-          # This code will run after
-          # template has been loaded, cloned
-          # and transformed by directives.
           converter = new Markdown.Converter()
 
           help = ->
@@ -121,7 +116,7 @@ angular.module('topicoContentEditors')
               editor.refreshPreview()
             modal.modal('hide')
 
-          # elements is for correct unit tests
+          # elements[] is for correct unit tests
           editor = new Markdown.Editor(converter, "-"+scope.editorUniqueId, {
             handler: help
             includeCallback: scope.includeCallback

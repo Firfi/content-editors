@@ -11,3 +11,4 @@ angular.module('topicoContentEditorsF5ddApp', ['topicoContentEditors'])
         redirectTo: '/'
       });
   });
+

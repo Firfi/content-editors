@@ -18,14 +18,10 @@
     "angular-scenario": "~1.0.7",
     "jasmine-query": "git@github.com:velesin/jasmine-jquery.git"
   },
-  "main": [
-    "dist/scripts/scripts.js",
-    "dist/scripts/plugins.js",
-    "dist/styles/main.css"
-  ],
   "ignore": [
     "examples",
-    "src",
-    "topico-content-editors-f5dd"
+    "topico-content-editors-f5dd",
+    "bower_components",
+    "src"
   ]
 }

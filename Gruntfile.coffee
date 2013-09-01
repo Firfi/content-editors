@@ -14,6 +14,7 @@ module.exports = (grunt) ->
     app: 'src'
     dist: 'dist'
     temp: '.temp'
+    dist_full: 'dist_full'
 
   try
     yeomanConfig.app = require('./bower.json').appPath || yeomanConfig.app
@@ -107,6 +108,13 @@ module.exports = (grunt) ->
           src: "#{yeomanConfig.dist}/scripts/plugins.js"
           dest: "#{yeomanConfig.dist}/scripts/plugins.src.js"
         ]
+      temp:
+        files: [
+          cwd: "#{yeomanConfig.temp}/scripts"
+          expand: true
+          src: ["**"]
+          dest: "#{yeomanConfig.dist}/scripts/"
+        ]
 
 
     useminPrepare:
@@ -193,6 +201,12 @@ module.exports = (grunt) ->
         configFile: 'karma.conf.js',
         singleRun: true
 
+    bower: {
+      target: {
+        rjsConfig: 'src/rjs.js'
+      }
+    }
+
 
 #  # Register grunt tasks supplied by grunt-contrib-*.
 #  # Referenced in package.json.
@@ -235,20 +249,25 @@ module.exports = (grunt) ->
   grunt.registerTask 'dev', [
     'clean'
     'coffee'
+    #'copy:temp'
     #'jade'
     'ngtemplates:dist'
+
     'concat'
     #'less'
     'copy:imgsDev'
     'copy:imgs'
     'copy:pluginsSrc'
     'copy:views'
+
   ]
 
   grunt.registerTask 'default', [
+   # 'bower'
     'useminPrepare'
     'dev'
     'uglify'
     'cssmin'
     'usemin'
+
   ]

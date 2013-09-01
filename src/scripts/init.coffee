@@ -1,6 +1,7 @@
+
 angular.module('topicoContentEditors', ['topicoAngularServiceApp']);
 
-jQuery.fn.getCursorPosition = ->
+$.fn.getCursorPosition = ->
   input = jQuery(this).get(0)
   if document.selection
     input.focus()

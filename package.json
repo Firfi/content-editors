@@ -39,7 +39,9 @@
     "matchdep": "~0.1.2",
     "connect-livereload": "~0.2.0",
     "grunt-google-cdn": "~0.2.0",
-    "grunt-ngmin": "~0.0.2"
+    "grunt-ngmin": "~0.0.2",
+    "bower": "~1.2.5",
+    "grunt-bower-requirejs": "~0.7.1"
   },
   "engines": {
     "node": ">=0.8.0"

@@ -1,6 +1,6 @@
 angular.module('topicoContentEditors', ['topicoAngularServiceApp']);
 
-jQuery.fn.getCursorPosition = function() {
+$.fn.getCursorPosition = function() {
   var input, sel, selLen;
   input = jQuery(this).get(0);
   if (document.selection) {
@@ -97,7 +97,7 @@ angular.module('topicoContentEditors').directive('buttonToggle', function() {
 */
 'use strict';
 angular.module('topicoContentEditors').directive('topicoEditor', [
-  'topicoCEEditorSvc', 'topicoResourcesSvc', '$compile', '$timeout', '$templateCache', '$filter', 'topicoResourcesService', 'topicoCETestResourceSvc', function(topicoCEEditorSvc, topicoResourcesSvc, $compile, $timeout, $templateCache, $filter, topicoResourcesService, topicoCETestResourceSvc) {
+  'topicoCEEditorSvc', 'topicoResourcesSvc', '$compile', '$timeout', '$templateCache', '$filter', 'topicoResourcesService', function(topicoCEEditorSvc, topicoResourcesSvc, $compile, $timeout, $templateCache, $filter, topicoResourcesService) {
     var nextId;
     nextId = 0;
     return {
