@@ -6666,286 +6666,168 @@ else
   ]);
 }.call(this));
 'use strict';
-angular.module('topicoAngularServiceApp');
+angular.module('topicoAngularServiceApp', []).config([
+  '$routeProvider',
+  '$httpProvider',
+  function ($routeProvider, $httpProvider) {
+    $httpProvider.defaults.useXDomain = true;
+    delete $httpProvider.defaults.headers.common['X-Requested-With'];
+    $routeProvider.when('/', {
+      templateUrl: 'views/main.html',
+      controller: 'MainCtrl'
+    }).otherwise({ redirectTo: '/' });
+  }
+]);
 'use strict';
+angular.module('topicoAngularServiceApp');
 angular.module('topicoAngularServiceApp').factory('topicoCETestResourceSvc', function () {
   return {
-    'spaceId': '5175479e03646ab9f91930b3',
-    'name': 'ronspace',
-    'resourcesByType': [
+    'spaceId': 'xynta',
+    'topics': [
       {
-        'type': 'TaskDto',
-        'resources': [
-          {
-            'type': 'Task',
-            'text': 'Clear out stuff from basement',
-            'priority': 5,
-            'taskStatus': 'ACTIVE',
-            'id': '517547a003646ab9f91930c2',
-            'aboutTopicIds': [],
-            'aboutResIds': [],
-            'title': 'Clear out basement',
-            'topics': [{
-                'tag': 'basement',
-                'description': 'anything having to do with the basement',
-                'id': '5192e2d00364e8aa1ed3ada8',
-                'aboutTopicIds': [],
-                'aboutResIds': [],
-                'title': 'Basement',
-                'topics': [],
-                'nonTopicAbouts': [],
-                'statements': []
-              }],
-            'nonTopicAbouts': [],
-            'statements': []
-          },
-          {
-            'type': 'Task',
-            'text': 'buy a new road bike',
-            'priority': 2,
-            'taskStatus': 'NEW',
-            'id': '5192e38f0364e8aa1ed3adab',
-            'aboutTopicIds': [],
-            'aboutResIds': [],
-            'title': 'buy new bicycle',
-            'topics': [{
-                'tag': 'personal',
-                'description': 'Personal stuff',
-                'id': '5192e2bb0364e8aa1ed3ada7',
-                'aboutTopicIds': [],
-                'aboutResIds': [],
-                'title': 'Personal',
-                'topics': [],
-                'nonTopicAbouts': [],
-                'statements': []
-              }],
-            'nonTopicAbouts': [],
-            'statements': []
-          },
-          {
-            'type': 'Task',
-            'text': 'clear out extra stuff we don\'t need from house',
-            'priority': 3,
-            'taskStatus': 'ACTIVE',
-            'id': '518ea929036421dccb2be58f',
-            'aboutTopicIds': [],
-            'aboutResIds': [],
-            'title': 'clear out stuff from house',
-            'topics': [{
-                'tag': 'personal',
-                'description': 'Personal stuff',
-                'id': '5192e2bb0364e8aa1ed3ada7',
-                'aboutTopicIds': [],
-                'aboutResIds': [],
-                'title': 'Personal',
-                'topics': [],
-                'nonTopicAbouts': [],
-                'statements': []
-              }],
-            'nonTopicAbouts': [],
-            'statements': []
-          },
-          {
-            'type': 'Task',
-            'text': 'learn about unit and functional testing in AngularJS',
-            'priority': 3,
-            'taskStatus': 'ACTIVE',
-            'id': '5192e3600364e8aa1ed3adaa',
-            'aboutTopicIds': [],
-            'aboutResIds': [],
-            'title': 'learn about angularjs testing',
-            'topics': [{
-                'tag': 'angularjs',
-                'description': 'Anything having to do with AngularJS',
-                'id': '5192e2fa0364e8aa1ed3ada9',
-                'aboutTopicIds': [],
-                'aboutResIds': [],
-                'title': 'AngularJS',
-                'topics': [],
-                'nonTopicAbouts': [],
-                'statements': []
-              }],
-            'nonTopicAbouts': [],
-            'statements': []
-          },
-          {
-            'type': 'Task',
-            'text': 'task textoooo',
-            'priority': 3,
-            'taskStatus': 'CLOSED',
-            'id': '517547a003646ab9f91930c1',
-            'aboutTopicIds': [],
-            'aboutResIds': [],
-            'title': 'reallyaaaa',
-            'topics': [{
-                'tag': 'grails',
-                'description': 'grails description!!!',
-                'id': '518d2dbc03641c090f71fdb8',
-                'aboutTopicIds': [],
-                'aboutResIds': [],
-                'title': 'grails frameworkoooooo',
-                'topics': [],
-                'nonTopicAbouts': [],
-                'statements': []
-              }],
-            'nonTopicAbouts': [],
-            'statements': []
-          }
-        ]
+        'type': 'Res',
+        'description': 'Groovy topic',
+        'tag': 'groovy',
+        'resSchemaName': 'Topic',
+        'id': '521f954c0cf238a6d6bb5818',
+        'aboutTopicIds': [],
+        'aboutResIds': [],
+        'title': 'Java',
+        'nonTopicAbouts': [],
+        'statements': [{
+            'predicate': 'IS_ABOUT',
+            'objectId': '518d3cd70cf27f0e99132475'
+          }],
+        'tasks': [],
+        'subTopics': [],
+        'parent': null
       },
       {
-        'type': 'TopicDto',
-        'resources': [
-          {
-            'type': 'Topic',
-            'tag': 'angularjs',
-            'description': 'Anything having to do with AngularJS',
-            'id': '5192e2fa0364e8aa1ed3ada9',
-            'aboutTopicIds': [],
-            'aboutResIds': [],
-            'title': 'AngularJS',
-            'topics': [],
-            'nonTopicAbouts': [],
-            'statements': []
-          },
-          {
-            'type': 'Topic',
-            'tag': 'basement',
-            'description': 'anything having to do with the basement',
-            'id': '5192e2d00364e8aa1ed3ada8',
-            'aboutTopicIds': [],
-            'aboutResIds': [],
-            'title': 'Basement',
-            'topics': [{
-                'tag': 'personal',
-                'description': 'Personal stuff',
-                'id': '5192e2bb0364e8aa1ed3ada7',
-                'aboutTopicIds': [],
-                'aboutResIds': [],
-                'title': 'Personal',
-                'topics': [],
-                'nonTopicAbouts': [],
-                'statements': []
-              }],
-            'nonTopicAbouts': [],
-            'statements': []
-          },
-          {
-            'type': 'Topic',
-            'tag': 'cars',
-            'description': 'This is a topic about cars',
-            'id': '517547a003646ab9f91930bb',
-            'aboutTopicIds': [],
-            'aboutResIds': [],
-            'title': 'Cars topic',
-            'topics': [],
-            'nonTopicAbouts': [],
-            'statements': []
-          },
-          {
-            'type': 'Topic',
-            'tag': 'groovy',
-            'description': 'This is a topic about groovy',
-            'id': '517547a003646ab9f91930bc',
-            'aboutTopicIds': [],
-            'aboutResIds': [],
-            'title': 'Groovy topic',
-            'topics': [{
-                'tag': 'java',
-                'description': 'This is a topic about java',
-                'id': '517547a003646ab9f91930ba',
-                'aboutTopicIds': [],
-                'aboutResIds': [],
-                'title': 'Java topic',
-                'topics': [],
-                'nonTopicAbouts': [],
-                'statements': []
-              }],
-            'nonTopicAbouts': [],
-            'statements': []
-          },
-          {
-            'type': 'Topic',
-            'tag': 'java',
-            'description': 'This is a topic about java',
-            'id': '517547a003646ab9f91930ba',
-            'aboutTopicIds': [],
-            'aboutResIds': [],
-            'title': 'Java topic',
-            'topics': [],
-            'nonTopicAbouts': [],
-            'statements': []
-          },
-          {
-            'type': 'Topic',
-            'tag': 'personal',
-            'description': 'Personal stuff',
-            'id': '5192e2bb0364e8aa1ed3ada7',
-            'aboutTopicIds': [],
-            'aboutResIds': [],
-            'title': 'Personal',
-            'topics': [],
-            'nonTopicAbouts': [],
-            'statements': []
-          },
-          {
-            'type': 'Topic',
-            'tag': 'gorm',
-            'description': 'grails orm layer',
-            'id': '518d41110364c848ac4e0b74',
-            'aboutTopicIds': [],
-            'aboutResIds': [],
-            'title': 'gorm',
-            'topics': [{
-                'tag': 'grails',
-                'description': 'grails description',
-                'id': '518d2dbc03641c090f71fdb8',
-                'aboutTopicIds': [],
-                'aboutResIds': [],
-                'title': 'grails framework',
-                'topics': [],
-                'nonTopicAbouts': [],
-                'statements': []
-              }],
-            'nonTopicAbouts': [],
-            'statements': []
-          },
-          {
-            'type': 'Topic',
-            'tag': 'grails',
-            'description': 'grails description',
-            'id': '518d2dbc03641c090f71fdb8',
-            'aboutTopicIds': [],
-            'aboutResIds': [],
-            'title': 'grails framework',
-            'topics': [],
-            'nonTopicAbouts': [],
-            'statements': []
-          },
-          {
-            'type': 'Topic',
-            'tag': 'grails-tests',
-            'description': 'grails tets',
-            'id': '518d3ec90364bb53723e0579',
-            'aboutTopicIds': [],
-            'aboutResIds': [],
-            'title': 'grails tests',
-            'topics': [{
-                'type': 'Topic',
-                'tag': 'grails',
-                'description': 'grails description',
-                'id': '518d2dbc03641c090f71fdb8',
-                'aboutTopicIds': [],
-                'aboutResIds': [],
-                'title': 'grails framework',
-                'topics': [],
-                'nonTopicAbouts': [],
-                'statements': []
-              }]
-          }
-        ]
+        'type': 'Res',
+        'description': 'Test topic 2',
+        'tag': 'groovy',
+        'resSchemaName': 'Topic',
+        'id': '521f97fb0cf238a6d6bb5819',
+        'aboutTopicIds': [],
+        'aboutResIds': [],
+        'title': 'Test topic 2',
+        'nonTopicAbouts': [],
+        'statements': [{
+            'predicate': 'IS_ABOUT',
+            'objectId': '518d3cd70cf27f0e99132475'
+          }],
+        'tasks': [],
+        'subTopics': [],
+        'parent': null
       }
-    ]
+    ],
+    'tasks': [
+      {
+        'type': 'Task',
+        'text': 'Clear out stuff from basement1',
+        'priority': 5,
+        'taskStatus': 'ACTIVE',
+        'id': '521d0bc90cf238a6d6bb5810',
+        'aboutTopicIds': [],
+        'aboutResIds': [],
+        'title': 'Clear out test 1 basement',
+        'nonTopicAbouts': [],
+        'statements': [],
+        'subTasks': []
+      },
+      {
+        'type': 'Task',
+        'text': 'Clear out stuff from basement2',
+        'priority': 5,
+        'taskStatus': 'ACTIVE',
+        'id': '521e60880cf238a6d6bb5811',
+        'aboutTopicIds': [],
+        'aboutResIds': [],
+        'title': 'Clear out test 2basement',
+        'nonTopicAbouts': [],
+        'statements': [],
+        'subTasks': []
+      },
+      {
+        'type': 'Task',
+        'text': 'Clear out stuff from basement3',
+        'priority': 5,
+        'taskStatus': 'ACTIVE',
+        'id': '521e60930cf238a6d6bb5812',
+        'aboutTopicIds': [],
+        'aboutResIds': [],
+        'title': 'Clear out  test 3basement',
+        'nonTopicAbouts': [],
+        'statements': [],
+        'subTasks': []
+      },
+      {
+        'type': 'Task',
+        'text': 'task2 adsdsadsa',
+        'priority': 5,
+        'taskStatus': 'ACTIVE',
+        'id': '521e60e60cf238a6d6bb5813',
+        'aboutTopicIds': [],
+        'aboutResIds': [],
+        'title': 'task2 test test test',
+        'nonTopicAbouts': [],
+        'statements': [],
+        'subTasks': []
+      },
+      {
+        'type': 'Task',
+        'text': 'task4 test **text** new api4',
+        'priority': 5,
+        'taskStatus': 'ACTIVE',
+        'id': '521e6ab70cf238a6d6bb5815',
+        'aboutTopicIds': [],
+        'aboutResIds': [],
+        'title': 'task4 test test new api',
+        'nonTopicAbouts': [],
+        'statements': [],
+        'subTasks': []
+      },
+      {
+        'type': 'Task',
+        'text': 'task4 test **text** new api5',
+        'priority': 5,
+        'taskStatus': 'ACTIVE',
+        'id': '521e6c8f0cf238a6d6bb5816',
+        'aboutTopicIds': [],
+        'aboutResIds': [],
+        'title': 'task4 test tststs new api',
+        'nonTopicAbouts': [],
+        'statements': [],
+        'subTasks': []
+      },
+      {
+        'type': 'Task',
+        'text': 'task4 test **text** new api6',
+        'priority': 5,
+        'taskStatus': 'ACTIVE',
+        'id': '521e6daa0cf238a6d6bb5817',
+        'aboutTopicIds': [],
+        'aboutResIds': [],
+        'title': 'task4 test  tsts new api',
+        'nonTopicAbouts': [],
+        'statements': [],
+        'subTasks': []
+      },
+      {
+        'type': 'Task',
+        'text': 'text for test task **test**',
+        'priority': 5,
+        'taskStatus': 'ACTIVE',
+        'id': '521e61130cf238a6d6bb5814',
+        'aboutTopicIds': [],
+        'aboutResIds': [],
+        'title': 'testt task test test test',
+        'nonTopicAbouts': [],
+        'statements': [],
+        'subTasks': []
+      }
+    ],
+    'mainTopics': []
   };
 });
 'use strict';
@@ -7015,237 +6897,249 @@ angular.module('topicoAngularServiceApp').factory('topicoResourcesService', [
         return taskBaseUrl;
       }
     };
-    result = {
-      getTasks: function (theSpaceId) {
-        var deferred = $q.defer();
-        var svcUrl = getSvcUrl(theSpaceId);
-        var topics = [];
-        var sid = null;
-        var tasks = [];
-        var mainTopics = [];
-        $http({
-          method: 'GET',
-          withCredentials: true,
-          url: svcUrl
-        }).error(function (data, status) {
-          deferred.reject('Request failed: status=' + status + ', data=' + data + ', url=' + svcUrl);
-        }).success(function (res) {
-          sid = res.spaceId;
-          var topics_data = [];
-          var tasks_data = [];
-          if (res.resourcesByType.length == 1) {
-            tasks_data = res.resourcesByType[0] ? res.resourcesByType[0].resources : [];
-          } else {
-            topics_data = res.resourcesByType[0] ? res.resourcesByType[0].resources : [];
-            tasks_data = res.resourcesByType[1] ? res.resourcesByType[1].resources : [];
-          }
-          console.warn(topics_data);
-          console.warn(tasks_data);
-          for (var i = 0; i < topics_data.length; i++) {
-            topics_data[i].tasks = [];
-            topics_data[i].subTopics = [];
-            topics_data[i].parent = null;
-            topics.push(topics_data[i]);
-            if (topics_data[i].statements.length == 0) {
-              mainTopics.push(topics_data[i]);
+    var result = {
+        getTasks: function (theSpaceId) {
+          var deferred = $q.defer();
+          var svcUrl = getSvcUrl(theSpaceId);
+          $http({
+            method: 'GET',
+            withCredentials: true,
+            url: svcUrl
+          }).error(function (data, status) {
+            deferred.reject({
+              msg: 'Request failed',
+              status: status,
+              data: data,
+              url: svcUrl
+            });
+          }).success(function (res) {
+            if (typeof res == 'string' && res.indexOf('login') != -1) {
+              deferred.reject({
+                msg: 'Authentication failed ',
+                status: 0,
+                data: res,
+                url: svcUrl
+              });
+              return;
             }
-          }
-          for (var i = 0; i < topics.length; i++) {
-            for (var j = 0; j < topics[i].statements.length; j++) {
-              var topic = getTopic(topics[i].statements[j].objectId);
-              if (topic) {
+            var topics = [];
+            var tasks = [];
+            var mainTopics = [];
+            var sid = null;
+            var topics_data = [];
+            var tasks_data = [];
+            if (res.resourcesByType.length == 1) {
+              tasks_data = res.resourcesByType[0] ? res.resourcesByType[0].resources : [];
+            } else {
+              topics_data = res.resourcesByType[0] ? res.resourcesByType[0].resources : [];
+              tasks_data = res.resourcesByType[1] ? res.resourcesByType[1].resources : [];
+            }
+            for (var i = 0; i < topics_data.length; i++) {
+              topics_data[i].tasks = [];
+              topics_data[i].subTopics = [];
+              topics_data[i].parent = null;
+              topics.push(topics_data[i]);
+              if (topics_data[i].statements.length == 0) {
+                mainTopics.push(topics_data[i]);
+              }
+            }
+            for (var i = 0; i < topics.length; i++) {
+              for (var j = 0; j < topics[i].statements.length; j++) {
+                var topic = getTopic(topics[i].statements[j].objectId);
+                if (topic) {
+                  topic.subTopics.push(topics[i]);
+                  topics[i].parent = topic.id;
+                }
+              }
+            }
+            for (var i = 0; i < tasks_data.length; i++) {
+              tasks_data[i].subTasks = [];
+              tasks.push(tasks_data[i]);
+            }
+            for (var i = 0; i < tasks_data.length; i++) {
+              for (var j = 0; j < tasks_data[i].statements.length; j++) {
+                if (tasks_data[i].statements[j].predicate == 'IS_ABOUT') {
+                  var topic = getTopic(tasks_data[i].statements[j].objectId);
+                  pushTask(topic, tasks_data[i]);
+                }
+              }
+            }
+            for (var i = 0; i < tasks_data.length; i++) {
+              if (tasks_data[i].statements.length != 0) {
+                if (getTask(tasks_data[i].id) != null) {
+                  for (var j = 0; j < tasks_data[i].statements.length; j++) {
+                    if (tasks_data[i].statements[j].predicate == 'HAS_PARENT_TASK') {
+                      var task = getTask(tasks_data[i].statements[j].objectId);
+                      task.subTasks.push(tasks_data[i]);
+                      tasks_data[i].parent = task.id;
+                    }
+                  }
+                }
+              }
+            }
+            var self = result;
+            deferred.resolve({
+              'spaceId': sid,
+              'topics': topics,
+              'tasks': tasks,
+              'mainTopics': mainTopics,
+              saveTask: function (topic, task, parent, selectedTask) {
+                self.saveTask(topic, task, parent, selectedTask, sid);
+              },
+              saveTopic: function (topicsList, topic, parent, mainTopicFlag) {
+                self.saveTopic(topicsList, topic, parent, mainTopicFlag, sid);
+              }
+            });
+          });
+          return deferred.promise;
+        },
+        getSpaceTasks: function (theSpaceId) {
+          var svcUrl = getSvcUrl(theSpaceId);
+          $http({
+            method: 'GET',
+            withCredentials: true,
+            url: svcUrl
+          }).error(function (data, status) {
+            $log.error('Request failed: status=' + status + ', data=' + data + ', url=' + svcUrl);
+          }).success(function (res) {
+            $log.info('Success call to service ' + svcUrl + ': ' + res);
+            spaceId = res.spaceId;
+            var topics_data = [];
+            var tasks_data = [];
+            for (var i = 0; i < res.resourcesByType.length; i++) {
+              if (res.resourcesByType[i].type === 'Topic') {
+                topics_data = res.resourcesByType[i].resources;
+              } else if (res.resourcesByType[i].type === 'Task') {
+                tasks_data = res.resourcesByType[i].resources;
+              }
+            }
+            for (var i = 0; i < topics_data.length; i++) {
+              topics_data[i].tasks = [];
+              topics_data[i].subTopics = [];
+              topics_data[i].parent = null;
+              topics.push(topics_data[i]);
+              var mainFlag = true;
+              for (var j = 0; j < topics_data[i].statements.length && mainFlag; j++) {
+                if (topics_data[i].statements[j].predicate == 'IS_ABOUT') {
+                  mainFlag = false;
+                }
+              }
+              if (mainFlag) {
+                mainTopics.push(topics_data[i]);
+              }
+            }
+            console.log('not Finished');
+            for (var i = 0; i < topics.length; i++) {
+              for (var j = 0; j < topics[i].statements.length; j++) {
+                var topic = getTopic(topics[i].statements[j].objectId);
                 topic.subTopics.push(topics[i]);
                 topics[i].parent = topic.id;
               }
             }
-          }
-          for (var i = 0; i < tasks_data.length; i++) {
-            tasks_data[i].subTasks = [];
-            tasks.push(tasks_data[i]);
-          }
-          for (var i = 0; i < tasks_data.length; i++) {
-            for (var j = 0; j < tasks_data[i].statements.length; j++) {
-              if (tasks_data[i].statements[j].predicate == 'IS_ABOUT') {
-                var topic = getTopic(tasks_data[i].statements[j].objectId);
-                pushTask(topic, tasks_data[i]);
-              }
+            for (var i = 0; i < tasks_data.length; i++) {
+              tasks_data[i].subTasks = [];
+              tasks.push(tasks_data[i]);
             }
-          }
-          for (var i = 0; i < tasks_data.length; i++) {
-            if (tasks_data[i].statements.length != 0) {
-              if (getTask(tasks_data[i].id) != null) {
-                for (var j = 0; j < tasks_data[i].statements.length; j++) {
-                  if (tasks_data[i].statements[j].predicate == 'HAS_PARENT_TASK') {
-                    var task = getTask(tasks_data[i].statements[j].objectId);
-                    task.subTasks.push(tasks_data[i]);
-                    tasks_data[i].parent = task.id;
-                  }
+            for (var i = 0; i < tasks_data.length; i++) {
+              for (var j = 0; j < tasks_data[i].statements.length; j++) {
+                if (tasks_data[i].statements[j].predicate == 'IS_ABOUT') {
+                  var topic = getTopic(tasks_data[i].statements[j].objectId);
+                  pushTask(topic, tasks_data[i]);
                 }
               }
             }
-          }
-          var self = result;
-          deferred.resolve({
-            'spaceId': sid,
-            'topics': topics,
-            'tasks': tasks,
-            'mainTopics': mainTopics,
-            saveTask: function (topic, task, parent, selectedTask) {
-              self.saveTask(topic, task, parent, selectedTask, sid);
-            },
-            saveTopic: function (topicsList, topic, parent, mainTopicFlag) {
-              self.saveTopic(topicsList, topic, parent, mainTopicFlag, sid);
+            for (var i = 0; i < tasks_data.length; i++) {
+              if (tasks_data[i].statements.length != 0) {
+                if (getTask(tasks_data[i].id) != null)
+                  for (var j = 0; j < tasks_data[i].statements.length; j++) {
+                    if (tasks_data[i].statements[j].predicate == 'HAS_PARENT_TASK') {
+                      var task = getTask(tasks_data[i].statements[j].objectId);
+                      task.subTasks.push(tasks_data[i]);
+                      tasks_data[i].parent = task.id;
+                    }
+                  }
+              }
             }
           });
-        });
-        return deferred.promise;
-      },
-      getSpaceTasks: function (theSpaceId) {
-        var svcUrl = getSvcUrl(theSpaceId);
-        $http({
-          method: 'GET',
-          withCredentials: true,
-          url: svcUrl
-        }).error(function (data, status) {
-          $log.error('Request failed: status=' + status + ', data=' + data + ', url=' + svcUrl);
-        }).success(function (res) {
-          $log.info('Success call to service ' + svcUrl + ': ' + res);
-          spaceId = res.spaceId;
-          var topics_data = [];
-          var tasks_data = [];
-          for (var i = 0; i < res.resourcesByType.length; i++) {
-            if (res.resourcesByType[i].type === 'Topic') {
-              topics_data = res.resourcesByType[i].resources;
-            } else if (res.resourcesByType[i].type === 'Task') {
-              tasks_data = res.resourcesByType[i].resources;
-            }
-          }
-          for (var i = 0; i < topics_data.length; i++) {
-            topics_data[i].tasks = [];
-            topics_data[i].subTopics = [];
-            topics_data[i].parent = null;
-            topics.push(topics_data[i]);
-            var mainFlag = true;
-            for (var j = 0; j < topics_data[i].statements.length && mainFlag; j++) {
-              if (topics_data[i].statements[j].predicate == 'IS_ABOUT') {
-                mainFlag = false;
-              }
-            }
-            if (mainFlag) {
-              mainTopics.push(topics_data[i]);
-            }
-          }
-          for (var i = 0; i < topics.length; i++) {
-            for (var j = 0; j < topics[i].statements.length; j++) {
-              var topic = getTopic(topics[i].statements[j].objectId);
-              topic.subTopics.push(topics[i]);
-              topics[i].parent = topic.id;
-            }
-          }
-          for (var i = 0; i < tasks_data.length; i++) {
-            tasks_data[i].subTasks = [];
-            tasks.push(tasks_data[i]);
-          }
-          for (var i = 0; i < tasks_data.length; i++) {
-            for (var j = 0; j < tasks_data[i].statements.length; j++) {
-              if (tasks_data[i].statements[j].predicate == 'IS_ABOUT') {
-                var topic = getTopic(tasks_data[i].statements[j].objectId);
-                pushTask(topic, tasks_data[i]);
-              }
-            }
-          }
-          for (var i = 0; i < tasks_data.length; i++) {
-            if (tasks_data[i].statements.length != 0) {
-              if (getTask(tasks_data[i].id) != null)
-                for (var j = 0; j < tasks_data[i].statements.length; j++) {
-                  if (tasks_data[i].statements[j].predicate == 'HAS_PARENT_TASK') {
-                    var task = getTask(tasks_data[i].statements[j].objectId);
-                    task.subTasks.push(tasks_data[i]);
-                    tasks_data[i].parent = task.id;
-                  }
-                }
-            }
-          }
-        });
-        return {
-          'spaceId': spaceId,
-          'topics': topics,
-          'tasks': tasks,
-          'mainTopics': mainTopics
-        };
-      },
-      saveTask: function (topic, task, parent, selectedTask, theSpaceId) {
-        var sid = theSpaceId || spaceId;
-        var url = 'http://198.61.168.204:8080/topicoGrails/rest/resource/' + sid + '/';
-        if (task.id == null)
-          url += 'new';
-        else
-          url += task.id;
-        $http({
-          method: 'POST',
-          withCredentials: true,
-          url: url,
-          data: task
-        }).success(function (data, status, headers, config) {
-          if (task.id == null) {
-            data.subTasks = [];
-            data.parent = parent;
-          }
-          if (getIndex(topic.tasks, data.id) == -1) {
-            pushTask(topic, data);
-          }
-          if (selectedTask != null) {
-            if (getIndex(selectedTask.subTasks, data.id) == -1) {
-              selectedTask.subTasks.push(data);
-            }
-          }
-          if (getIndex(tasks, data.id) == -1) {
-            tasks.push(data);
-          }
-        }).error(function (data, status, headers, config) {
-          alert('fail to save task ' + status);
-        });
-      },
-      saveTopic: function (topicsList, topic, parent, mainTopicFlag, theSpaceId) {
-        var sid = theSpaceId || spaceId;
-        var url = 'http://198.61.168.204:8080/topicoGrails/rest/resource/' + sid + '/';
-        if (topic.id == null)
-          url += 'new';
-        else
-          url += topic.id;
-        $http({
-          method: 'POST',
-          withCredentials: true,
-          url: url,
-          data: topic
-        }).success(function (data, status, headers, config) {
-          var containsFlag = false;
-          for (var i = 0; i < topicsList.length; i++) {
-            if (topicsList[i].id == data.id)
-              containsFlag = true;
-          }
-          if (containsFlag == false) {
-            if (topic.id == null) {
-              data.tasks = [];
-              data.subTopics = [];
+          return {
+            'spaceId': spaceId,
+            'topics': topics,
+            'tasks': tasks,
+            'mainTopics': mainTopics
+          };
+        },
+        saveTask: function (topic, task, parent, selectedTask, theSpaceId) {
+          var sid = theSpaceId || spaceId;
+          var url = 'http://198.61.168.204:8080/topicoGrails/rest/resource/' + sid + '/';
+          if (task.id == null)
+            url += 'new';
+          else
+            url += task.id;
+          $http({
+            method: 'POST',
+            withCredentials: true,
+            url: url,
+            data: task
+          }).success(function (data, status, headers, config) {
+            if (task.id == null) {
+              data.subTasks = [];
               data.parent = parent;
             }
-            topicsList.push(data);
-          }
-          if (mainTopicFlag) {
-            if (getIndex(mainTopics, data.id) == -1) {
-              mainTopics.push(data);
+            if (getIndex(topic.tasks, data.id) == -1) {
+              pushTask(topic, data);
             }
-          } else {
-            if (getIndex(topics, data.id) == -1) {
-              topics.push(data);
+            if (selectedTask != null) {
+              if (getIndex(selectedTask.subTasks, data.id) == -1) {
+                selectedTask.subTasks.push(data);
+              }
             }
-          }
-        }).error(function (data, status, headers, config) {
-          alert('fail to save topic ' + status);
-        });
-      }
-    };
+            if (getIndex(tasks, data.id) == -1) {
+              tasks.push(data);
+            }
+          }).error(function (data, status, headers, config) {
+            alert('fail to save task ' + status);
+          });
+        },
+        saveTopic: function (topicsList, topic, parent, mainTopicFlag, theSpaceId) {
+          var sid = theSpaceId || spaceId;
+          var url = 'http://198.61.168.204:8080/topicoGrails/rest/resource/' + sid + '/';
+          if (topic.id == null)
+            url += 'new';
+          else
+            url += topic.id;
+          $http({
+            method: 'POST',
+            withCredentials: true,
+            url: url,
+            data: topic
+          }).success(function (data, status, headers, config) {
+            var containsFlag = false;
+            for (var i = 0; i < topicsList.length; i++) {
+              if (topicsList[i].id == data.id)
+                containsFlag = true;
+            }
+            if (containsFlag == false) {
+              if (topic.id == null) {
+                data.tasks = [];
+                data.subTopics = [];
+                data.parent = parent;
+              }
+              topicsList.push(data);
+            }
+            if (mainTopicFlag) {
+              if (getIndex(mainTopics, data.id) == -1) {
+                mainTopics.push(data);
+              }
+            } else {
+              if (getIndex(topics, data.id) == -1) {
+                topics.push(data);
+              }
+            }
+          }).error(function (data, status, headers, config) {
+            alert('fail to save topic ' + status);
+          });
+        }
+      };
     return result;
   }
 ]);

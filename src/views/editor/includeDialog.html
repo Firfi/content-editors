@@ -12,6 +12,7 @@
                 {{ type.name }}
             </button>
         </div>
+        <div ng-show="servicesError">{{ servicesError }}</div>
         <div>
             <label>
                 <input ng-model="filters.title" type="text"/>

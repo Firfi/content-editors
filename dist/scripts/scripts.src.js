@@ -36,6 +36,7 @@ angular.module("topicoContentEditors").run(["$templateCache", function($template
     "                {{ type.name }}\n" +
     "            </button>\n" +
     "        </div>\n" +
+    "        <div ng-show=\"servicesError\">{{ servicesError }}</div>\n" +
     "        <div>\n" +
     "            <label>\n" +
     "                <input ng-model=\"filters.title\" type=\"text\"/>\n" +
@@ -97,7 +98,7 @@ angular.module('topicoContentEditors').directive('buttonToggle', function() {
 */
 'use strict';
 angular.module('topicoContentEditors').directive('topicoEditor', [
-  'topicoCEEditorSvc', 'topicoResourcesSvc', '$compile', '$timeout', '$templateCache', '$filter', 'topicoResourcesService', function(topicoCEEditorSvc, topicoResourcesSvc, $compile, $timeout, $templateCache, $filter, topicoResourcesService) {
+  'topicoCEEditorSvc', 'topicoResourcesSvc', '$compile', '$timeout', '$templateCache', '$filter', 'topicoResourcesService', 'topicoCETestResourceSvc', function(topicoCEEditorSvc, topicoResourcesSvc, $compile, $timeout, $templateCache, $filter, topicoResourcesService, topicoCETestResourceSvc) {
     var nextId;
     nextId = 0;
     return {
@@ -109,14 +110,15 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
         html: '='
       },
       link: function(scope, element, attrs) {
-        var api;
+        var api, serviceSuccess;
         scope.editorUniqueId = nextId++;
         scope.includeLinkId = "wmd-include-link-" + scope.editorUniqueId;
         scope.editorAreaId = "wmd-input-" + scope.editorUniqueId;
         scope.modalId = "wmd-include-" + scope.editorUniqueId;
         api = null;
-        topicoResourcesService.getTasks().then(function(res) {
+        serviceSuccess = function(res) {
           var getResources;
+          console.warn(JSON.stringify(res));
           api = res;
           scope.schemaOrType = function(o) {
             return o.resSchemaName || o.type;
@@ -160,6 +162,10 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
             });
             return (_ref = []).concat.apply(_ref, r);
           };
+        };
+        topicoResourcesService.getTasks().then(serviceSuccess, function(err) {
+          scope.servicesError = "error in request to " + err.url + ":\n" + err.msg + ". Make sure that you can access " + err.url + " through browser.\nFor now you'll see mockup data.";
+          return serviceSuccess(topicoCETestResourceSvc);
         });
         return $timeout(function() {
           var $wmdInput, converter, editor, editorArea, help, includeLink, isPreviewRefresh, modal, topic, watches;

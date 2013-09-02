@@ -9,7 +9,8 @@ angular.module('topicoContentEditors')
     '$templateCache',
     '$filter'
     'topicoResourcesService',
-    (topicoCEEditorSvc, topicoResourcesSvc, $compile, $timeout, $templateCache, $filter, topicoResourcesService) ->
+    'topicoCETestResourceSvc'
+    (topicoCEEditorSvc, topicoResourcesSvc, $compile, $timeout, $templateCache, $filter, topicoResourcesService, topicoCETestResourceSvc) ->
 
       nextId = 0;
 
@@ -37,7 +38,8 @@ angular.module('topicoContentEditors')
 
         api = null
 
-        topicoResourcesService.getTasks().then (res) ->
+        serviceSuccess = (res) ->
+          console.warn(JSON.stringify(res))
           api = res
           scope.schemaOrType = (o) ->
             o.resSchemaName || o.type
@@ -63,6 +65,14 @@ angular.module('topicoContentEditors')
               if scope.filters.title is '' then type.resources else _.select type.resources, (res) ->
                 res.title?.toLowerCase()?.indexOf(scope.filters.title.toLowerCase()) isnt -1
             [].concat r...
+
+        topicoResourcesService.getTasks().then serviceSuccess, (err) ->
+          scope.servicesError = """error in request to #{err.url}:
+                                  #{err.msg}. Make sure that you can access #{err.url} through browser.
+                                  For now you'll see mockup data.
+                                """
+          serviceSuccess(topicoCETestResourceSvc)
+
 
 
         # this is method to evaluate template so it is accessible through window.document.getElementById().
