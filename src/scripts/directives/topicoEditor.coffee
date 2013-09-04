@@ -83,7 +83,6 @@ angular.module('topicoContentEditors')
           includeLink = $('#'+scope.includeLinkId)
           editorArea = $('#'+scope.editorAreaId)
           modal = $('#'+scope.modalId)
-          modal.modal('hide')
 
           converter = new Markdown.Converter()
 
@@ -125,7 +124,7 @@ angular.module('topicoContentEditors')
             editorArea.val(newText)
             $timeout ->
               editor.refreshPreview()
-            modal.modal();
+            modal.modal('hide');
 
           # elements[] is for correct unit tests
           editor = new Markdown.Editor(converter, "-"+scope.editorUniqueId, {
