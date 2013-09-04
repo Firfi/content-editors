@@ -22,7 +22,7 @@ $.fn.getCursorPosition = function() {
 angular.module("topicoContentEditors").run(["$templateCache", function($templateCache) {
 
   $templateCache.put("editor/includeDialog.html",
-    "<div class=\"modal fade\" id=\"{{ modalId }}\">\n" +
+    "<div class=\"modal hide fade\" tabindex=\"-1\" id=\"{{ modalId }}\">\n" +
     "    <div class=\"modal-header\">\n" +
     "        <a class=\"close\" data-dismiss=\"modal\">&times;</a>\n" +
     "        <h3>Include resource</h3>\n" +
@@ -172,6 +172,7 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
           includeLink = $('#' + scope.includeLinkId);
           editorArea = $('#' + scope.editorAreaId);
           modal = $('#' + scope.modalId);
+          modal.modal('hide');
           converter = new Markdown.Converter();
           help = function() {
             return alert("Topico markdown editor");
@@ -212,7 +213,7 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
             $timeout(function() {
               return editor.refreshPreview();
             });
-            return modal.modal('hide');
+            return modal.modal();
           };
           editor = new Markdown.Editor(converter, "-" + scope.editorUniqueId, {
             handler: help,
