@@ -6655,297 +6655,169 @@ else
     }
 })();
 
-(function () {
-  'use strict';
-  angular.module('topicoAngularServiceApp', []).config([
-    '$httpProvider',
-    function ($httpProvider) {
-      $httpProvider.defaults.useXDomain = true;
-      return delete $httpProvider.defaults.headers.common['X-Requested-With'];
-    }
-  ]);
-}.call(this));
+'use strict';
+angular.module('topicoAngularServiceApp', []).config([
+  '$routeProvider',
+  '$httpProvider',
+  function ($routeProvider, $httpProvider) {
+    $httpProvider.defaults.useXDomain = true;
+    delete $httpProvider.defaults.headers.common['X-Requested-With'];
+    $routeProvider.when('/', {
+      templateUrl: 'views/main.html',
+      controller: 'MainCtrl'
+    }).otherwise({ redirectTo: '/' });
+  }
+]);
 'use strict';
 angular.module('topicoAngularServiceApp');
-'use strict';
 angular.module('topicoAngularServiceApp').factory('topicoCETestResourceSvc', function () {
   return {
-    'spaceId': '5175479e03646ab9f91930b3',
-    'name': 'ronspace',
-    'resourcesByType': [
+    'spaceId': 'xynta',
+    'topics': [
       {
-        'type': 'TaskDto',
-        'resources': [
-          {
-            'type': 'Task',
-            'text': 'Clear out stuff from basement',
-            'priority': 5,
-            'taskStatus': 'ACTIVE',
-            'id': '517547a003646ab9f91930c2',
-            'aboutTopicIds': [],
-            'aboutResIds': [],
-            'title': 'Clear out basement',
-            'topics': [{
-                'tag': 'basement',
-                'description': 'anything having to do with the basement',
-                'id': '5192e2d00364e8aa1ed3ada8',
-                'aboutTopicIds': [],
-                'aboutResIds': [],
-                'title': 'Basement',
-                'topics': [],
-                'nonTopicAbouts': [],
-                'statements': []
-              }],
-            'nonTopicAbouts': [],
-            'statements': []
-          },
-          {
-            'type': 'Task',
-            'text': 'buy a new road bike',
-            'priority': 2,
-            'taskStatus': 'NEW',
-            'id': '5192e38f0364e8aa1ed3adab',
-            'aboutTopicIds': [],
-            'aboutResIds': [],
-            'title': 'buy new bicycle',
-            'topics': [{
-                'tag': 'personal',
-                'description': 'Personal stuff',
-                'id': '5192e2bb0364e8aa1ed3ada7',
-                'aboutTopicIds': [],
-                'aboutResIds': [],
-                'title': 'Personal',
-                'topics': [],
-                'nonTopicAbouts': [],
-                'statements': []
-              }],
-            'nonTopicAbouts': [],
-            'statements': []
-          },
-          {
-            'type': 'Task',
-            'text': 'clear out extra stuff we don\'t need from house',
-            'priority': 3,
-            'taskStatus': 'ACTIVE',
-            'id': '518ea929036421dccb2be58f',
-            'aboutTopicIds': [],
-            'aboutResIds': [],
-            'title': 'clear out stuff from house',
-            'topics': [{
-                'tag': 'personal',
-                'description': 'Personal stuff',
-                'id': '5192e2bb0364e8aa1ed3ada7',
-                'aboutTopicIds': [],
-                'aboutResIds': [],
-                'title': 'Personal',
-                'topics': [],
-                'nonTopicAbouts': [],
-                'statements': []
-              }],
-            'nonTopicAbouts': [],
-            'statements': []
-          },
-          {
-            'type': 'Task',
-            'text': 'learn about unit and functional testing in AngularJS',
-            'priority': 3,
-            'taskStatus': 'ACTIVE',
-            'id': '5192e3600364e8aa1ed3adaa',
-            'aboutTopicIds': [],
-            'aboutResIds': [],
-            'title': 'learn about angularjs testing',
-            'topics': [{
-                'tag': 'angularjs',
-                'description': 'Anything having to do with AngularJS',
-                'id': '5192e2fa0364e8aa1ed3ada9',
-                'aboutTopicIds': [],
-                'aboutResIds': [],
-                'title': 'AngularJS',
-                'topics': [],
-                'nonTopicAbouts': [],
-                'statements': []
-              }],
-            'nonTopicAbouts': [],
-            'statements': []
-          },
-          {
-            'type': 'Task',
-            'text': 'task textoooo',
-            'priority': 3,
-            'taskStatus': 'CLOSED',
-            'id': '517547a003646ab9f91930c1',
-            'aboutTopicIds': [],
-            'aboutResIds': [],
-            'title': 'reallyaaaa',
-            'topics': [{
-                'tag': 'grails',
-                'description': 'grails description!!!',
-                'id': '518d2dbc03641c090f71fdb8',
-                'aboutTopicIds': [],
-                'aboutResIds': [],
-                'title': 'grails frameworkoooooo',
-                'topics': [],
-                'nonTopicAbouts': [],
-                'statements': []
-              }],
-            'nonTopicAbouts': [],
-            'statements': []
-          }
-        ]
+        'type': 'Res',
+        'description': 'Groovy topic',
+        'tag': 'groovy',
+        'resSchemaName': 'Topic',
+        'id': '521f954c0cf238a6d6bb5818',
+        'aboutTopicIds': [],
+        'aboutResIds': [],
+        'title': 'Java',
+        'nonTopicAbouts': [],
+        'statements': [{
+            'predicate': 'IS_ABOUT',
+            'objectId': '518d3cd70cf27f0e99132475'
+          }],
+        'tasks': [],
+        'subTopics': [],
+        'parent': null
       },
       {
-        'type': 'TopicDto',
-        'resources': [
-          {
-            'type': 'Topic',
-            'tag': 'angularjs',
-            'description': 'Anything having to do with AngularJS',
-            'id': '5192e2fa0364e8aa1ed3ada9',
-            'aboutTopicIds': [],
-            'aboutResIds': [],
-            'title': 'AngularJS',
-            'topics': [],
-            'nonTopicAbouts': [],
-            'statements': []
-          },
-          {
-            'type': 'Topic',
-            'tag': 'basement',
-            'description': 'anything having to do with the basement',
-            'id': '5192e2d00364e8aa1ed3ada8',
-            'aboutTopicIds': [],
-            'aboutResIds': [],
-            'title': 'Basement',
-            'topics': [{
-                'tag': 'personal',
-                'description': 'Personal stuff',
-                'id': '5192e2bb0364e8aa1ed3ada7',
-                'aboutTopicIds': [],
-                'aboutResIds': [],
-                'title': 'Personal',
-                'topics': [],
-                'nonTopicAbouts': [],
-                'statements': []
-              }],
-            'nonTopicAbouts': [],
-            'statements': []
-          },
-          {
-            'type': 'Topic',
-            'tag': 'cars',
-            'description': 'This is a topic about cars',
-            'id': '517547a003646ab9f91930bb',
-            'aboutTopicIds': [],
-            'aboutResIds': [],
-            'title': 'Cars topic',
-            'topics': [],
-            'nonTopicAbouts': [],
-            'statements': []
-          },
-          {
-            'type': 'Topic',
-            'tag': 'groovy',
-            'description': 'This is a topic about groovy',
-            'id': '517547a003646ab9f91930bc',
-            'aboutTopicIds': [],
-            'aboutResIds': [],
-            'title': 'Groovy topic',
-            'topics': [{
-                'tag': 'java',
-                'description': 'This is a topic about java',
-                'id': '517547a003646ab9f91930ba',
-                'aboutTopicIds': [],
-                'aboutResIds': [],
-                'title': 'Java topic',
-                'topics': [],
-                'nonTopicAbouts': [],
-                'statements': []
-              }],
-            'nonTopicAbouts': [],
-            'statements': []
-          },
-          {
-            'type': 'Topic',
-            'tag': 'java',
-            'description': 'This is a topic about java',
-            'id': '517547a003646ab9f91930ba',
-            'aboutTopicIds': [],
-            'aboutResIds': [],
-            'title': 'Java topic',
-            'topics': [],
-            'nonTopicAbouts': [],
-            'statements': []
-          },
-          {
-            'type': 'Topic',
-            'tag': 'personal',
-            'description': 'Personal stuff',
-            'id': '5192e2bb0364e8aa1ed3ada7',
-            'aboutTopicIds': [],
-            'aboutResIds': [],
-            'title': 'Personal',
-            'topics': [],
-            'nonTopicAbouts': [],
-            'statements': []
-          },
-          {
-            'type': 'Topic',
-            'tag': 'gorm',
-            'description': 'grails orm layer',
-            'id': '518d41110364c848ac4e0b74',
-            'aboutTopicIds': [],
-            'aboutResIds': [],
-            'title': 'gorm',
-            'topics': [{
-                'tag': 'grails',
-                'description': 'grails description',
-                'id': '518d2dbc03641c090f71fdb8',
-                'aboutTopicIds': [],
-                'aboutResIds': [],
-                'title': 'grails framework',
-                'topics': [],
-                'nonTopicAbouts': [],
-                'statements': []
-              }],
-            'nonTopicAbouts': [],
-            'statements': []
-          },
-          {
-            'type': 'Topic',
-            'tag': 'grails',
-            'description': 'grails description',
-            'id': '518d2dbc03641c090f71fdb8',
-            'aboutTopicIds': [],
-            'aboutResIds': [],
-            'title': 'grails framework',
-            'topics': [],
-            'nonTopicAbouts': [],
-            'statements': []
-          },
-          {
-            'type': 'Topic',
-            'tag': 'grails-tests',
-            'description': 'grails tets',
-            'id': '518d3ec90364bb53723e0579',
-            'aboutTopicIds': [],
-            'aboutResIds': [],
-            'title': 'grails tests',
-            'topics': [{
-                'type': 'Topic',
-                'tag': 'grails',
-                'description': 'grails description',
-                'id': '518d2dbc03641c090f71fdb8',
-                'aboutTopicIds': [],
-                'aboutResIds': [],
-                'title': 'grails framework',
-                'topics': [],
-                'nonTopicAbouts': [],
-                'statements': []
-              }]
-          }
-        ]
+        'type': 'Res',
+        'description': 'Test topic 2',
+        'tag': 'groovy',
+        'resSchemaName': 'Topic',
+        'id': '521f97fb0cf238a6d6bb5819',
+        'aboutTopicIds': [],
+        'aboutResIds': [],
+        'title': 'Test topic 2',
+        'nonTopicAbouts': [],
+        'statements': [{
+            'predicate': 'IS_ABOUT',
+            'objectId': '518d3cd70cf27f0e99132475'
+          }],
+        'tasks': [],
+        'subTopics': [],
+        'parent': null
       }
-    ]
+    ],
+    'tasks': [
+      {
+        'type': 'Task',
+        'text': 'Clear out stuff from basement1',
+        'priority': 5,
+        'taskStatus': 'ACTIVE',
+        'id': '521d0bc90cf238a6d6bb5810',
+        'aboutTopicIds': [],
+        'aboutResIds': [],
+        'title': 'Clear out test 1 basement',
+        'nonTopicAbouts': [],
+        'statements': [],
+        'subTasks': []
+      },
+      {
+        'type': 'Task',
+        'text': 'Clear out stuff from basement2',
+        'priority': 5,
+        'taskStatus': 'ACTIVE',
+        'id': '521e60880cf238a6d6bb5811',
+        'aboutTopicIds': [],
+        'aboutResIds': [],
+        'title': 'Clear out test 2basement',
+        'nonTopicAbouts': [],
+        'statements': [],
+        'subTasks': []
+      },
+      {
+        'type': 'Task',
+        'text': 'Clear out stuff from basement3',
+        'priority': 5,
+        'taskStatus': 'ACTIVE',
+        'id': '521e60930cf238a6d6bb5812',
+        'aboutTopicIds': [],
+        'aboutResIds': [],
+        'title': 'Clear out  test 3basement',
+        'nonTopicAbouts': [],
+        'statements': [],
+        'subTasks': []
+      },
+      {
+        'type': 'Task',
+        'text': 'task2 adsdsadsa',
+        'priority': 5,
+        'taskStatus': 'ACTIVE',
+        'id': '521e60e60cf238a6d6bb5813',
+        'aboutTopicIds': [],
+        'aboutResIds': [],
+        'title': 'task2 test test test',
+        'nonTopicAbouts': [],
+        'statements': [],
+        'subTasks': []
+      },
+      {
+        'type': 'Task',
+        'text': 'task4 test **text** new api4',
+        'priority': 5,
+        'taskStatus': 'ACTIVE',
+        'id': '521e6ab70cf238a6d6bb5815',
+        'aboutTopicIds': [],
+        'aboutResIds': [],
+        'title': 'task4 test test new api',
+        'nonTopicAbouts': [],
+        'statements': [],
+        'subTasks': []
+      },
+      {
+        'type': 'Task',
+        'text': 'task4 test **text** new api5',
+        'priority': 5,
+        'taskStatus': 'ACTIVE',
+        'id': '521e6c8f0cf238a6d6bb5816',
+        'aboutTopicIds': [],
+        'aboutResIds': [],
+        'title': 'task4 test tststs new api',
+        'nonTopicAbouts': [],
+        'statements': [],
+        'subTasks': []
+      },
+      {
+        'type': 'Task',
+        'text': 'task4 test **text** new api6',
+        'priority': 5,
+        'taskStatus': 'ACTIVE',
+        'id': '521e6daa0cf238a6d6bb5817',
+        'aboutTopicIds': [],
+        'aboutResIds': [],
+        'title': 'task4 test  tsts new api',
+        'nonTopicAbouts': [],
+        'statements': [],
+        'subTasks': []
+      },
+      {
+        'type': 'Task',
+        'text': 'text for test task **test**',
+        'priority': 5,
+        'taskStatus': 'ACTIVE',
+        'id': '521e61130cf238a6d6bb5814',
+        'aboutTopicIds': [],
+        'aboutResIds': [],
+        'title': 'testt task test test test',
+        'nonTopicAbouts': [],
+        'statements': [],
+        'subTasks': []
+      }
+    ],
+    'mainTopics': []
   };
 });
 'use strict';
@@ -7015,246 +6887,261 @@ angular.module('topicoAngularServiceApp').factory('topicoResourcesService', [
         return taskBaseUrl;
       }
     };
-    result = {
-      getTasks: function (theSpaceId) {
-        var deferred = $q.defer();
-        var svcUrl = getSvcUrl(theSpaceId);
-        var topics = [];
-        var sid = null;
-        var tasks = [];
-        var mainTopics = [];
-        $http({
-          method: 'GET',
-          withCredentials: true,
-          url: svcUrl
-        }).error(function (data, status) {
-          deferred.reject('Request failed: status=' + status + ', data=' + data + ', url=' + svcUrl);
-        }).success(function (res) {
-          sid = res.spaceId;
-          var topics_data = [];
-          var tasks_data = [];
-          if (res.resourcesByType.length == 1) {
-            tasks_data = res.resourcesByType[0] ? res.resourcesByType[0].resources : [];
-          } else {
-            topics_data = res.resourcesByType[0] ? res.resourcesByType[0].resources : [];
-            tasks_data = res.resourcesByType[1] ? res.resourcesByType[1].resources : [];
-          }
-          console.warn(topics_data);
-          console.warn(tasks_data);
-          for (var i = 0; i < topics_data.length; i++) {
-            topics_data[i].tasks = [];
-            topics_data[i].subTopics = [];
-            topics_data[i].parent = null;
-            topics.push(topics_data[i]);
-            if (topics_data[i].statements.length == 0) {
-              mainTopics.push(topics_data[i]);
+    var result = {
+        getTasks: function (theSpaceId) {
+          var deferred = $q.defer();
+          var svcUrl = getSvcUrl(theSpaceId);
+          $http({
+            method: 'GET',
+            withCredentials: true,
+            url: svcUrl
+          }).error(function (data, status) {
+            deferred.reject({
+              msg: 'Request failed',
+              status: status,
+              data: data,
+              url: svcUrl
+            });
+          }).success(function (res) {
+            if (typeof res == 'string' && res.indexOf('login') != -1) {
+              deferred.reject({
+                msg: 'Authentication failed ',
+                status: 0,
+                data: res,
+                url: svcUrl
+              });
+              return;
             }
-          }
-          for (var i = 0; i < topics.length; i++) {
-            for (var j = 0; j < topics[i].statements.length; j++) {
-              var topic = getTopic(topics[i].statements[j].objectId);
-              if (topic) {
+            var tasks = [];
+            var topics = [];
+            var mainTopics = [];
+            var sid = null;
+            var grouped = _.chain(res.resourcesByType).groupBy(function (v) {
+                return v.type.toLowerCase();
+              }).map(function (v, k) {
+                return [
+                  k,
+                  v[0].resources
+                ];
+              }).object().value();
+            var tasks_data = grouped.task || [];
+            var topics_data = grouped.topic || [];
+            topics = _.map(topics_data, function (d) {
+              d.tasks = [];
+              d.subTopics = [];
+              d.parent = null;
+              if (!_.find(d.statements, function (s) {
+                  return s.predicate === 'IS_ABOUT';
+                })) {
+                mainTopics.push(d);
+              }
+              return d;
+            });
+            _.each(topics, function (t) {
+              _.each(t.statements, function (s) {
+                var topic = getTopic.call(this, s.objectId);
+                if (topic) {
+                  topic.subTopics.push(t);
+                  t.parent = topic.id;
+                }
+              });
+            });
+            _.each(tasks_data, function (td) {
+              td.subTasks = [];
+              tasks.push(td);
+            });
+            _.each(tasks_data, function (td) {
+              _.each(td.statements, function (s) {
+                if (s.predicate === 'IS_ABOUT') {
+                  var topic = _.find(topics, function (t) {
+                      return t.id === s.objectId;
+                    });
+                  pushTask(topic, td);
+                }
+              });
+            });
+            for (var i = 0; i < tasks_data.length; i++) {
+              if (tasks_data[i].statements.length != 0) {
+                if (getTask(tasks_data[i].id) != null) {
+                  for (var j = 0; j < tasks_data[i].statements.length; j++) {
+                    if (tasks_data[i].statements[j].predicate == 'HAS_PARENT_TASK') {
+                      var task = getTask(tasks_data[i].statements[j].objectId);
+                      task.subTasks.push(tasks_data[i]);
+                      tasks_data[i].parent = task.id;
+                    }
+                  }
+                }
+              }
+            }
+            var self = result;
+            deferred.resolve({
+              'spaceId': sid,
+              'topics': topics,
+              'tasks': tasks,
+              'mainTopics': mainTopics,
+              saveTask: function (topic, task, parent, selectedTask) {
+                self.saveTask(topic, task, parent, selectedTask, sid);
+              },
+              saveTopic: function (topicsList, topic, parent, mainTopicFlag) {
+                self.saveTopic(topicsList, topic, parent, mainTopicFlag, sid);
+              }
+            });
+          });
+          return deferred.promise;
+        },
+        getSpaceTasks: function (theSpaceId) {
+          var svcUrl = getSvcUrl(theSpaceId);
+          $http({
+            method: 'GET',
+            withCredentials: true,
+            url: svcUrl
+          }).error(function (data, status) {
+            $log.error('Request failed: status=' + status + ', data=' + data + ', url=' + svcUrl);
+          }).success(function (res) {
+            $log.info('Success call to service ' + svcUrl + ': ' + res);
+            spaceId = res.spaceId;
+            var topics_data = [];
+            var tasks_data = [];
+            for (var i = 0; i < res.resourcesByType.length; i++) {
+              if (res.resourcesByType[i].type === 'Topic') {
+                topics_data = res.resourcesByType[i].resources;
+              } else if (res.resourcesByType[i].type === 'Task') {
+                tasks_data = res.resourcesByType[i].resources;
+              }
+            }
+            for (var i = 0; i < topics_data.length; i++) {
+              topics_data[i].tasks = [];
+              topics_data[i].subTopics = [];
+              topics_data[i].parent = null;
+              topics.push(topics_data[i]);
+              var mainFlag = true;
+              for (var j = 0; j < topics_data[i].statements.length && mainFlag; j++) {
+                if (topics_data[i].statements[j].predicate == 'IS_ABOUT') {
+                  mainFlag = false;
+                }
+              }
+              if (mainFlag) {
+                mainTopics.push(topics_data[i]);
+              }
+            }
+            for (var i = 0; i < topics.length; i++) {
+              for (var j = 0; j < topics[i].statements.length; j++) {
+                var topic = getTopic(topics[i].statements[j].objectId);
                 topic.subTopics.push(topics[i]);
                 topics[i].parent = topic.id;
               }
             }
-          }
-          for (var i = 0; i < tasks_data.length; i++) {
-            tasks_data[i].subTasks = [];
-            tasks.push(tasks_data[i]);
-          }
-          for (var i = 0; i < tasks_data.length; i++) {
-            for (var j = 0; j < tasks_data[i].statements.length; j++) {
-              if (tasks_data[i].statements[j].predicate == 'IS_ABOUT') {
-                var topic = getTopic(tasks_data[i].statements[j].objectId);
-                pushTask(topic, tasks_data[i]);
-              }
+            for (var i = 0; i < tasks_data.length; i++) {
+              tasks_data[i].subTasks = [];
+              tasks.push(tasks_data[i]);
             }
-          }
-          for (var i = 0; i < tasks_data.length; i++) {
-            if (tasks_data[i].statements.length != 0) {
-              if (getTask(tasks_data[i].id) != null) {
-                for (var j = 0; j < tasks_data[i].statements.length; j++) {
-                  if (tasks_data[i].statements[j].predicate == 'HAS_PARENT_TASK') {
-                    var task = getTask(tasks_data[i].statements[j].objectId);
-                    task.subTasks.push(tasks_data[i]);
-                    tasks_data[i].parent = task.id;
-                  }
+            for (var i = 0; i < tasks_data.length; i++) {
+              for (var j = 0; j < tasks_data[i].statements.length; j++) {
+                if (tasks_data[i].statements[j].predicate == 'IS_ABOUT') {
+                  var topic = getTopic(tasks_data[i].statements[j].objectId);
+                  pushTask(topic, tasks_data[i]);
                 }
               }
             }
-          }
-          var self = result;
-          deferred.resolve({
-            'spaceId': sid,
-            'topics': topics,
-            'tasks': tasks,
-            'mainTopics': mainTopics,
-            saveTask: function (topic, task, parent, selectedTask) {
-              self.saveTask(topic, task, parent, selectedTask, sid);
-            },
-            saveTopic: function (topicsList, topic, parent, mainTopicFlag) {
-              self.saveTopic(topicsList, topic, parent, mainTopicFlag, sid);
+            for (var i = 0; i < tasks_data.length; i++) {
+              if (tasks_data[i].statements.length != 0) {
+                if (getTask(tasks_data[i].id) != null)
+                  for (var j = 0; j < tasks_data[i].statements.length; j++) {
+                    if (tasks_data[i].statements[j].predicate == 'HAS_PARENT_TASK') {
+                      var task = getTask(tasks_data[i].statements[j].objectId);
+                      task.subTasks.push(tasks_data[i]);
+                      tasks_data[i].parent = task.id;
+                    }
+                  }
+              }
             }
           });
-        });
-        return deferred.promise;
-      },
-      getSpaceTasks: function (theSpaceId) {
-        var svcUrl = getSvcUrl(theSpaceId);
-        $http({
-          method: 'GET',
-          withCredentials: true,
-          url: svcUrl
-        }).error(function (data, status) {
-          $log.error('Request failed: status=' + status + ', data=' + data + ', url=' + svcUrl);
-        }).success(function (res) {
-          $log.info('Success call to service ' + svcUrl + ': ' + res);
-          spaceId = res.spaceId;
-          var topics_data = [];
-          var tasks_data = [];
-          for (var i = 0; i < res.resourcesByType.length; i++) {
-            if (res.resourcesByType[i].type === 'Topic') {
-              topics_data = res.resourcesByType[i].resources;
-            } else if (res.resourcesByType[i].type === 'Task') {
-              tasks_data = res.resourcesByType[i].resources;
-            }
-          }
-          for (var i = 0; i < topics_data.length; i++) {
-            topics_data[i].tasks = [];
-            topics_data[i].subTopics = [];
-            topics_data[i].parent = null;
-            topics.push(topics_data[i]);
-            var mainFlag = true;
-            for (var j = 0; j < topics_data[i].statements.length && mainFlag; j++) {
-              if (topics_data[i].statements[j].predicate == 'IS_ABOUT') {
-                mainFlag = false;
-              }
-            }
-            if (mainFlag) {
-              mainTopics.push(topics_data[i]);
-            }
-          }
-          for (var i = 0; i < topics.length; i++) {
-            for (var j = 0; j < topics[i].statements.length; j++) {
-              var topic = getTopic(topics[i].statements[j].objectId);
-              topic.subTopics.push(topics[i]);
-              topics[i].parent = topic.id;
-            }
-          }
-          for (var i = 0; i < tasks_data.length; i++) {
-            tasks_data[i].subTasks = [];
-            tasks.push(tasks_data[i]);
-          }
-          for (var i = 0; i < tasks_data.length; i++) {
-            for (var j = 0; j < tasks_data[i].statements.length; j++) {
-              if (tasks_data[i].statements[j].predicate == 'IS_ABOUT') {
-                var topic = getTopic(tasks_data[i].statements[j].objectId);
-                pushTask(topic, tasks_data[i]);
-              }
-            }
-          }
-          for (var i = 0; i < tasks_data.length; i++) {
-            if (tasks_data[i].statements.length != 0) {
-              if (getTask(tasks_data[i].id) != null)
-                for (var j = 0; j < tasks_data[i].statements.length; j++) {
-                  if (tasks_data[i].statements[j].predicate == 'HAS_PARENT_TASK') {
-                    var task = getTask(tasks_data[i].statements[j].objectId);
-                    task.subTasks.push(tasks_data[i]);
-                    tasks_data[i].parent = task.id;
-                  }
-                }
-            }
-          }
-        });
-        return {
-          'spaceId': spaceId,
-          'topics': topics,
-          'tasks': tasks,
-          'mainTopics': mainTopics
-        };
-      },
-      saveTask: function (topic, task, parent, selectedTask, theSpaceId) {
-        var sid = theSpaceId || spaceId;
-        var url = 'http://198.61.168.204:8080/topicoGrails/rest/resource/' + sid + '/';
-        if (task.id == null)
-          url += 'new';
-        else
-          url += task.id;
-        $http({
-          method: 'POST',
-          withCredentials: true,
-          url: url,
-          data: task
-        }).success(function (data, status, headers, config) {
-          if (task.id == null) {
-            data.subTasks = [];
-            data.parent = parent;
-          }
-          if (getIndex(topic.tasks, data.id) == -1) {
-            pushTask(topic, data);
-          }
-          if (selectedTask != null) {
-            if (getIndex(selectedTask.subTasks, data.id) == -1) {
-              selectedTask.subTasks.push(data);
-            }
-          }
-          if (getIndex(tasks, data.id) == -1) {
-            tasks.push(data);
-          }
-        }).error(function (data, status, headers, config) {
-          alert('fail to save task ' + status);
-        });
-      },
-      saveTopic: function (topicsList, topic, parent, mainTopicFlag, theSpaceId) {
-        var sid = theSpaceId || spaceId;
-        var url = 'http://198.61.168.204:8080/topicoGrails/rest/resource/' + sid + '/';
-        if (topic.id == null)
-          url += 'new';
-        else
-          url += topic.id;
-        $http({
-          method: 'POST',
-          withCredentials: true,
-          url: url,
-          data: topic
-        }).success(function (data, status, headers, config) {
-          var containsFlag = false;
-          for (var i = 0; i < topicsList.length; i++) {
-            if (topicsList[i].id == data.id)
-              containsFlag = true;
-          }
-          if (containsFlag == false) {
-            if (topic.id == null) {
-              data.tasks = [];
-              data.subTopics = [];
+          return {
+            'spaceId': spaceId,
+            'topics': topics,
+            'tasks': tasks,
+            'mainTopics': mainTopics
+          };
+        },
+        saveTask: function (topic, task, parent, selectedTask, theSpaceId) {
+          var sid = theSpaceId || spaceId;
+          var url = 'http://198.61.168.204:8080/topicoGrails/rest/resource/' + sid + '/';
+          if (task.id == null)
+            url += 'new';
+          else
+            url += task.id;
+          $http({
+            method: 'POST',
+            withCredentials: true,
+            url: url,
+            data: task
+          }).success(function (data, status, headers, config) {
+            if (task.id == null) {
+              data.subTasks = [];
               data.parent = parent;
             }
-            topicsList.push(data);
-          }
-          if (mainTopicFlag) {
-            if (getIndex(mainTopics, data.id) == -1) {
-              mainTopics.push(data);
+            if (getIndex(topic.tasks, data.id) == -1) {
+              pushTask(topic, data);
             }
-          } else {
-            if (getIndex(topics, data.id) == -1) {
-              topics.push(data);
+            if (selectedTask != null) {
+              if (getIndex(selectedTask.subTasks, data.id) == -1) {
+                selectedTask.subTasks.push(data);
+              }
             }
-          }
-        }).error(function (data, status, headers, config) {
-          alert('fail to save topic ' + status);
-        });
-      }
-    };
+            if (getIndex(tasks, data.id) == -1) {
+              tasks.push(data);
+            }
+          }).error(function (data, status, headers, config) {
+            alert('fail to save task ' + status);
+          });
+        },
+        saveTopic: function (topicsList, topic, parent, mainTopicFlag, theSpaceId) {
+          var sid = theSpaceId || spaceId;
+          var url = 'http://198.61.168.204:8080/topicoGrails/rest/resource/' + sid + '/';
+          if (topic.id == null)
+            url += 'new';
+          else
+            url += topic.id;
+          $http({
+            method: 'POST',
+            withCredentials: true,
+            url: url,
+            data: topic
+          }).success(function (data, status, headers, config) {
+            var containsFlag = false;
+            for (var i = 0; i < topicsList.length; i++) {
+              if (topicsList[i].id == data.id)
+                containsFlag = true;
+            }
+            if (containsFlag == false) {
+              if (topic.id == null) {
+                data.tasks = [];
+                data.subTopics = [];
+                data.parent = parent;
+              }
+              topicsList.push(data);
+            }
+            if (mainTopicFlag) {
+              if (getIndex(mainTopics, data.id) == -1) {
+                mainTopics.push(data);
+              }
+            } else {
+              if (getIndex(topics, data.id) == -1) {
+                topics.push(data);
+              }
+            }
+          }).error(function (data, status, headers, config) {
+            alert('fail to save topic ' + status);
+          });
+        }
+      };
     return result;
   }
 ]);
 'use strict';
 angular.module('topicoAngularServiceApp').factory('topicoSpaceService', [
   '$http',
-  '$rootScope',
-  '$log',
-  function ($http, $rootScope, $log) {
+  function ($http) {
     return {
       list: function (callback) {
         $http({
@@ -7262,7 +7149,6 @@ angular.module('topicoAngularServiceApp').factory('topicoSpaceService', [
           url: 'http://198.61.168.204:8080/topicoGrails/rest/spaces',
           withCredentials: true
         }).success(function (res) {
-          console.log(res);
           callback(res);
         }).error(function (data, status) {
           console.log('Request failed: status=' + status + ', data=' + data);
@@ -7271,7 +7157,7 @@ angular.module('topicoAngularServiceApp').factory('topicoSpaceService', [
     };
   }
 ]);
-//     Underscore.js 1.5.1
+//     Underscore.js 1.5.2
 //     http://underscorejs.org
 //     (c) 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 //     Underscore may be freely distributed under the MIT license.
@@ -7281,7 +7167,7 @@ angular.module('topicoAngularServiceApp').factory('topicoSpaceService', [
   // Baseline setup
   // --------------
 
-  // Establish the root object, `window` in the browser, or `global` on the server.
+  // Establish the root object, `window` in the browser, or `exports` on the server.
   var root = this;
 
   // Save the previous value of the `_` variable.
@@ -7338,7 +7224,7 @@ angular.module('topicoAngularServiceApp').factory('topicoSpaceService', [
   }
 
   // Current version.
-  _.VERSION = '1.5.1';
+  _.VERSION = '1.5.2';
 
   // Collection Functions
   // --------------------
@@ -7351,14 +7237,13 @@ angular.module('topicoAngularServiceApp').factory('topicoSpaceService', [
     if (nativeForEach && obj.forEach === nativeForEach) {
       obj.forEach(iterator, context);
     } else if (obj.length === +obj.length) {
-      for (var i = 0, l = obj.length; i < l; i++) {
+      for (var i = 0, length = obj.length; i < length; i++) {
         if (iterator.call(context, obj[i], i, obj) === breaker) return;
       }
     } else {
-      for (var key in obj) {
-        if (_.has(obj, key)) {
-          if (iterator.call(context, obj[key], key, obj) === breaker) return;
-        }
+      var keys = _.keys(obj);
+      for (var i = 0, length = keys.length; i < length; i++) {
+        if (iterator.call(context, obj[keys[i]], keys[i], obj) === breaker) return;
       }
     }
   };
@@ -7557,7 +7442,8 @@ angular.module('topicoAngularServiceApp').factory('topicoSpaceService', [
     return result.value;
   };
 
-  // Shuffle an array.
+  // Shuffle an array, using the modern version of the 
+  // [Fisher-Yates shuffle](http://en.wikipedia.org/wiki/Fisher–Yates_shuffle).
   _.shuffle = function(obj) {
     var rand;
     var index = 0;
@@ -7570,6 +7456,16 @@ angular.module('topicoAngularServiceApp').factory('topicoSpaceService', [
     return shuffled;
   };
 
+  // Sample **n** random values from an array.
+  // If **n** is not specified, returns a single random element from the array.
+  // The internal `guard` argument allows it to work with `map`.
+  _.sample = function(obj, n, guard) {
+    if (arguments.length < 2 || guard) {
+      return obj[_.random(obj.length - 1)];
+    }
+    return _.shuffle(obj).slice(0, Math.max(0, n));
+  };
+
   // An internal function to generate lookup iterators.
   var lookupIterator = function(value) {
     return _.isFunction(value) ? value : function(obj){ return obj[value]; };
@@ -7580,9 +7476,9 @@ angular.module('topicoAngularServiceApp').factory('topicoSpaceService', [
     var iterator = lookupIterator(value);
     return _.pluck(_.map(obj, function(value, index, list) {
       return {
-        value : value,
-        index : index,
-        criteria : iterator.call(context, value, index, list)
+        value: value,
+        index: index,
+        criteria: iterator.call(context, value, index, list)
       };
     }).sort(function(left, right) {
       var a = left.criteria;
@@ -7591,38 +7487,41 @@ angular.module('topicoAngularServiceApp').factory('topicoSpaceService', [
         if (a > b || a === void 0) return 1;
         if (a < b || b === void 0) return -1;
       }
-      return left.index < right.index ? -1 : 1;
+      return left.index - right.index;
     }), 'value');
   };
 
   // An internal function used for aggregate "group by" operations.
-  var group = function(obj, value, context, behavior) {
-    var result = {};
-    var iterator = lookupIterator(value == null ? _.identity : value);
-    each(obj, function(value, index) {
-      var key = iterator.call(context, value, index, obj);
-      behavior(result, key, value);
-    });
-    return result;
+  var group = function(behavior) {
+    return function(obj, value, context) {
+      var result = {};
+      var iterator = value == null ? _.identity : lookupIterator(value);
+      each(obj, function(value, index) {
+        var key = iterator.call(context, value, index, obj);
+        behavior(result, key, value);
+      });
+      return result;
+    };
   };
 
   // Groups the object's values by a criterion. Pass either a string attribute
   // to group by, or a function that returns the criterion.
-  _.groupBy = function(obj, value, context) {
-    return group(obj, value, context, function(result, key, value) {
-      (_.has(result, key) ? result[key] : (result[key] = [])).push(value);
-    });
-  };
+  _.groupBy = group(function(result, key, value) {
+    (_.has(result, key) ? result[key] : (result[key] = [])).push(value);
+  });
+
+  // Indexes the object's values by a criterion, similar to `groupBy`, but for
+  // when you know that your index values will be unique.
+  _.indexBy = group(function(result, key, value) {
+    result[key] = value;
+  });
 
   // Counts instances of an object that group by a certain criterion. Pass
   // either a string attribute to count by, or a function that returns the
   // criterion.
-  _.countBy = function(obj, value, context) {
-    return group(obj, value, context, function(result, key) {
-      if (!_.has(result, key)) result[key] = 0;
-      result[key]++;
-    });
-  };
+  _.countBy = group(function(result, key) {
+    _.has(result, key) ? result[key]++ : result[key] = 1;
+  });
 
   // Use a comparator function to figure out the smallest index at which
   // an object should be inserted so as to maintain order. Uses binary search.
@@ -7659,7 +7558,7 @@ angular.module('topicoAngularServiceApp').factory('topicoSpaceService', [
   // allows it to work with `_.map`.
   _.first = _.head = _.take = function(array, n, guard) {
     if (array == null) return void 0;
-    return (n != null) && !guard ? slice.call(array, 0, n) : array[0];
+    return (n == null) || guard ? array[0] : slice.call(array, 0, n);
   };
 
   // Returns everything but the last entry of the array. Especially useful on
@@ -7674,10 +7573,10 @@ angular.module('topicoAngularServiceApp').factory('topicoSpaceService', [
   // values in the array. The **guard** check allows it to work with `_.map`.
   _.last = function(array, n, guard) {
     if (array == null) return void 0;
-    if ((n != null) && !guard) {
-      return slice.call(array, Math.max(array.length - n, 0));
-    } else {
+    if ((n == null) || guard) {
       return array[array.length - 1];
+    } else {
+      return slice.call(array, Math.max(array.length - n, 0));
     }
   };
 
@@ -7709,7 +7608,7 @@ angular.module('topicoAngularServiceApp').factory('topicoSpaceService', [
     return output;
   };
 
-  // Return a completely flattened version of an array.
+  // Flatten out an array, either recursively (by default), or just one level.
   _.flatten = function(array, shallow) {
     return flatten(array, shallow, []);
   };
@@ -7781,7 +7680,7 @@ angular.module('topicoAngularServiceApp').factory('topicoSpaceService', [
   _.object = function(list, values) {
     if (list == null) return {};
     var result = {};
-    for (var i = 0, l = list.length; i < l; i++) {
+    for (var i = 0, length = list.length; i < length; i++) {
       if (values) {
         result[list[i]] = values[i];
       } else {
@@ -7799,17 +7698,17 @@ angular.module('topicoAngularServiceApp').factory('topicoSpaceService', [
   // for **isSorted** to use binary search.
   _.indexOf = function(array, item, isSorted) {
     if (array == null) return -1;
-    var i = 0, l = array.length;
+    var i = 0, length = array.length;
     if (isSorted) {
       if (typeof isSorted == 'number') {
-        i = (isSorted < 0 ? Math.max(0, l + isSorted) : isSorted);
+        i = (isSorted < 0 ? Math.max(0, length + isSorted) : isSorted);
       } else {
         i = _.sortedIndex(array, item);
         return array[i] === item ? i : -1;
       }
     }
     if (nativeIndexOf && array.indexOf === nativeIndexOf) return array.indexOf(item, isSorted);
-    for (; i < l; i++) if (array[i] === item) return i;
+    for (; i < length; i++) if (array[i] === item) return i;
     return -1;
   };
 
@@ -7835,11 +7734,11 @@ angular.module('topicoAngularServiceApp').factory('topicoSpaceService', [
     }
     step = arguments[2] || 1;
 
-    var len = Math.max(Math.ceil((stop - start) / step), 0);
+    var length = Math.max(Math.ceil((stop - start) / step), 0);
     var idx = 0;
-    var range = new Array(len);
+    var range = new Array(length);
 
-    while(idx < len) {
+    while(idx < length) {
       range[idx++] = start;
       start += step;
     }
@@ -7951,17 +7850,24 @@ angular.module('topicoAngularServiceApp').factory('topicoSpaceService', [
   // N milliseconds. If `immediate` is passed, trigger the function on the
   // leading edge, instead of the trailing.
   _.debounce = function(func, wait, immediate) {
-    var result;
-    var timeout = null;
+    var timeout, args, context, timestamp, result;
     return function() {
-      var context = this, args = arguments;
+      context = this;
+      args = arguments;
+      timestamp = new Date();
       var later = function() {
-        timeout = null;
-        if (!immediate) result = func.apply(context, args);
+        var last = (new Date()) - timestamp;
+        if (last < wait) {
+          timeout = setTimeout(later, wait - last);
+        } else {
+          timeout = null;
+          if (!immediate) result = func.apply(context, args);
+        }
       };
       var callNow = immediate && !timeout;
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
+      if (!timeout) {
+        timeout = setTimeout(later, wait);
+      }
       if (callNow) result = func.apply(context, args);
       return result;
     };
@@ -8027,22 +7933,33 @@ angular.module('topicoAngularServiceApp').factory('topicoSpaceService', [
 
   // Retrieve the values of an object's properties.
   _.values = function(obj) {
-    var values = [];
-    for (var key in obj) if (_.has(obj, key)) values.push(obj[key]);
+    var keys = _.keys(obj);
+    var length = keys.length;
+    var values = new Array(length);
+    for (var i = 0; i < length; i++) {
+      values[i] = obj[keys[i]];
+    }
     return values;
   };
 
   // Convert an object into a list of `[key, value]` pairs.
   _.pairs = function(obj) {
-    var pairs = [];
-    for (var key in obj) if (_.has(obj, key)) pairs.push([key, obj[key]]);
+    var keys = _.keys(obj);
+    var length = keys.length;
+    var pairs = new Array(length);
+    for (var i = 0; i < length; i++) {
+      pairs[i] = [keys[i], obj[keys[i]]];
+    }
     return pairs;
   };
 
   // Invert the keys and values of an object. The values must be serializable.
   _.invert = function(obj) {
     var result = {};
-    for (var key in obj) if (_.has(obj, key)) result[obj[key]] = key;
+    var keys = _.keys(obj);
+    for (var i = 0, length = keys.length; i < length; i++) {
+      result[obj[keys[i]]] = keys[i];
+    }
     return result;
   };
 
@@ -8326,8 +8243,7 @@ angular.module('topicoAngularServiceApp').factory('topicoSpaceService', [
       '<': '&lt;',
       '>': '&gt;',
       '"': '&quot;',
-      "'": '&#x27;',
-      '/': '&#x2F;'
+      "'": '&#x27;'
     }
   };
   entityMap.unescape = _.invert(entityMap.escape);
@@ -8358,7 +8274,7 @@ angular.module('topicoAngularServiceApp').factory('topicoSpaceService', [
 
   // Add your own custom functions to the Underscore object.
   _.mixin = function(obj) {
-    each(_.functions(obj), function(name){
+    each(_.functions(obj), function(name) {
       var func = _[name] = obj[name];
       _.prototype[name] = function() {
         var args = [this._wrapped];
