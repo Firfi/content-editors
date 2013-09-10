@@ -6655,16 +6655,6 @@ else
     }
 })();
 
-(function () {
-  'use strict';
-  angular.module('topicoAngularServiceApp', []).config([
-    '$httpProvider',
-    function ($httpProvider) {
-      $httpProvider.defaults.useXDomain = true;
-      return delete $httpProvider.defaults.headers.common['X-Requested-With'];
-    }
-  ]);
-}.call(this));
 'use strict';
 angular.module('topicoAngularServiceApp', []).config([
   '$routeProvider',
@@ -6922,48 +6912,54 @@ angular.module('topicoAngularServiceApp').factory('topicoResourcesService', [
               });
               return;
             }
-            var topics = [];
             var tasks = [];
+            var topics = [];
             var mainTopics = [];
             var sid = null;
-            var topics_data = [];
-            var tasks_data = [];
-            if (res.resourcesByType.length == 1) {
-              tasks_data = res.resourcesByType[0] ? res.resourcesByType[0].resources : [];
-            } else {
-              topics_data = res.resourcesByType[0] ? res.resourcesByType[0].resources : [];
-              tasks_data = res.resourcesByType[1] ? res.resourcesByType[1].resources : [];
-            }
-            for (var i = 0; i < topics_data.length; i++) {
-              topics_data[i].tasks = [];
-              topics_data[i].subTopics = [];
-              topics_data[i].parent = null;
-              topics.push(topics_data[i]);
-              if (topics_data[i].statements.length == 0) {
-                mainTopics.push(topics_data[i]);
+            var grouped = _.chain(res.resourcesByType).groupBy(function (v) {
+                return v.type.toLowerCase();
+              }).map(function (v, k) {
+                return [
+                  k,
+                  v[0].resources
+                ];
+              }).object().value();
+            var tasks_data = grouped.task || [];
+            var topics_data = grouped.topic || [];
+            topics = _.map(topics_data, function (d) {
+              d.tasks = [];
+              d.subTopics = [];
+              d.parent = null;
+              if (!_.find(d.statements, function (s) {
+                  return s.predicate === 'IS_ABOUT';
+                })) {
+                mainTopics.push(d);
               }
-            }
-            for (var i = 0; i < topics.length; i++) {
-              for (var j = 0; j < topics[i].statements.length; j++) {
-                var topic = getTopic(topics[i].statements[j].objectId);
+              return d;
+            });
+            _.each(topics, function (t) {
+              _.each(t.statements, function (s) {
+                var topic = getTopic.call(this, s.objectId);
                 if (topic) {
-                  topic.subTopics.push(topics[i]);
-                  topics[i].parent = topic.id;
+                  topic.subTopics.push(t);
+                  t.parent = topic.id;
                 }
-              }
-            }
-            for (var i = 0; i < tasks_data.length; i++) {
-              tasks_data[i].subTasks = [];
-              tasks.push(tasks_data[i]);
-            }
-            for (var i = 0; i < tasks_data.length; i++) {
-              for (var j = 0; j < tasks_data[i].statements.length; j++) {
-                if (tasks_data[i].statements[j].predicate == 'IS_ABOUT') {
-                  var topic = getTopic(tasks_data[i].statements[j].objectId);
-                  pushTask(topic, tasks_data[i]);
+              });
+            });
+            _.each(tasks_data, function (td) {
+              td.subTasks = [];
+              tasks.push(td);
+            });
+            _.each(tasks_data, function (td) {
+              _.each(td.statements, function (s) {
+                if (s.predicate === 'IS_ABOUT') {
+                  var topic = _.find(topics, function (t) {
+                      return t.id === s.objectId;
+                    });
+                  pushTask(topic, td);
                 }
-              }
-            }
+              });
+            });
             for (var i = 0; i < tasks_data.length; i++) {
               if (tasks_data[i].statements.length != 0) {
                 if (getTask(tasks_data[i].id) != null) {

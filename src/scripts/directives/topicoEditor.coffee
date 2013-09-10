@@ -9,8 +9,9 @@ angular.module('topicoContentEditors')
     '$templateCache',
     '$filter'
     'topicoResourcesService',
-    'topicoCETestResourceSvc'
-    (topicoCEEditorSvc, topicoResourcesSvc, $compile, $timeout, $templateCache, $filter, topicoResourcesService, topicoCETestResourceSvc) ->
+    'topicoCETestResourceSvc',
+    '$q'
+    (topicoCEEditorSvc, topicoResourcesSvc, $compile, $timeout, $templateCache, $filter, topicoResourcesService, topicoCETestResourceSvc, $q) ->
 
       nextId = 0;
 
@@ -21,7 +22,7 @@ angular.module('topicoContentEditors')
                   <div id="wmd-preview-{{ editorUniqueId }}" class="wmd-panel wmd-preview"></div>
                 </div>
                 <div ng-include=" 'editor/includeDialog.html' "></div>
-                <a id="{{ includeLinkId }}" style="display: none;" href="#{{ modalId }}" data-toggle="modal"></a>
+                <a id="{{ includeLinkId }}" style="display: none;" href="#{{ modalId }}"></a>
                 </div>'''
       replace: true
       restrict: 'E'
@@ -38,8 +39,11 @@ angular.module('topicoContentEditors')
 
         api = null
 
+        serviceDefer = $q.defer()
+
+        scope.resources = []
+
         serviceSuccess = (res) ->
-          console.warn(JSON.stringify(res))
           api = res
           scope.schemaOrType = (o) ->
             o.resSchemaName || o.type
@@ -52,7 +56,6 @@ angular.module('topicoContentEditors')
             r = $.map scope.types, (type) ->
               type.resources
             [].concat r...
-          # see watch option here http://stackoverflow.com/questions/11135864/scope-watch-is-not-updating-value-fetched-from-resource-on-custom-directive
           scope.resources = getResources()
           scope.filters =
             title: ''
@@ -65,6 +68,8 @@ angular.module('topicoContentEditors')
               if scope.filters.title is '' then type.resources else _.select type.resources, (res) ->
                 res.title?.toLowerCase()?.indexOf(scope.filters.title.toLowerCase()) isnt -1
             [].concat r...
+
+          serviceDefer.resolve()
 
         topicoResourcesService.getTasks().then serviceSuccess, (err) ->
           scope.servicesError = """error in request to #{err.url}:
@@ -80,7 +85,6 @@ angular.module('topicoContentEditors')
         # Approach in https://github.com/programmieraffe/angular-editors doesn't work with tests but only in browser
         $timeout ->
 
-          includeLink = $('#'+scope.includeLinkId)
           editorArea = $('#'+scope.editorAreaId)
           modal = $('#'+scope.modalId)
 
@@ -112,7 +116,7 @@ angular.module('topicoContentEditors')
               carret: editorArea.getCursorPosition()
               text: editorArea.val()
 
-            includeLink.click()
+            modal.modal()
 
           scope.includeResource = (id) ->
             cursor = scope.popupState.carret
@@ -162,7 +166,6 @@ angular.module('topicoContentEditors')
                 newWatches.push p1
 
 
-
               scope.$parent[p1] ? (r = $filter('getById')(scope.resources, p1); (r?.text or r?.description)) ? p1
 
             # remove watches for what {{include ...}} was removed
@@ -188,6 +191,7 @@ angular.module('topicoContentEditors')
             editor.refreshPreview()
             isPreviewRefresh = false
 
-
+          $timeout ->
+            editor.refreshPreview()
     ])
 
