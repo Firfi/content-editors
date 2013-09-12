@@ -38,6 +38,7 @@ angular.module('topicoContentEditors')
         scope.modalId = "wmd-include-#{scope.editorUniqueId}"
 
         api = null
+        editor = null
 
         serviceDefer = $q.defer()
 
@@ -68,6 +69,9 @@ angular.module('topicoContentEditors')
               if scope.filters.title is '' then type.resources else _.select type.resources, (res) ->
                 res.title?.toLowerCase()?.indexOf(scope.filters.title.toLowerCase()) isnt -1
             [].concat r...
+
+          $timeout ->  # this make it preload richHtml on initialisation when editor is being included with ng-switch
+            editor.refreshPreview()
 
           serviceDefer.resolve()
 

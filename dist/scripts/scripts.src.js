@@ -110,12 +110,13 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
         html: '='
       },
       link: function(scope, element, attrs) {
-        var api, serviceDefer, serviceSuccess;
+        var api, editor, serviceDefer, serviceSuccess;
         scope.editorUniqueId = nextId++;
         scope.includeLinkId = "wmd-include-link-" + scope.editorUniqueId;
         scope.editorAreaId = "wmd-input-" + scope.editorUniqueId;
         scope.modalId = "wmd-include-" + scope.editorUniqueId;
         api = null;
+        editor = null;
         serviceDefer = $q.defer();
         scope.resources = [];
         serviceSuccess = function(res) {
@@ -163,6 +164,9 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
             });
             return (_ref = []).concat.apply(_ref, r);
           };
+          $timeout(function() {
+            return editor.refreshPreview();
+          });
           return serviceDefer.resolve();
         };
         topicoResourcesService.getTasks().then(serviceSuccess, function(err) {
@@ -170,7 +174,7 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
           return serviceSuccess(topicoCETestResourceSvc);
         });
         return $timeout(function() {
-          var $wmdInput, converter, editor, editorArea, help, isPreviewRefresh, modal, topic, watches;
+          var $wmdInput, converter, editorArea, help, isPreviewRefresh, modal, topic, watches;
           editorArea = $('#' + scope.editorAreaId);
           modal = $('#' + scope.modalId);
           converter = new Markdown.Converter();
