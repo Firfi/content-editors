@@ -101,30 +101,33 @@ angular.module('topicoContentEditors').directive('buttonToggle', function() {
 //@ sourceMappingURL=buttonToggle.js.map
 */
 'use strict';
-angular.module('topicoContentEditors').directive('ilLazy', function($compile) {
+angular.module('topicoContentEditors').directive('lazy', function($compile) {
   return {
+    restrict: 'E',
     scope: {
-      ilIf: '='
+      renderIf: '='
     },
-    restrict: 'A',
-    link: function($scope, element, attr) {
-      var html, render, unregister;
-      console.warn('load lazy');
-      html = element.html();
-      render = function() {
-        var IF, c;
-        IF = $scope.ilIf;
-        if (IF) {
-          unregister();
-          c = $compile('<topico-editor markdown="descriptionMarkdown" html="descriptionHtml"></topico-editor>')($scope.$parent);
-          console.warn(c);
-          return element.append(c);
-        } else {
-          return element.html('');
-        }
+    compile: function(e) {
+      var html;
+      html = e.html();
+      e.html('');
+      return function(scope, element, attrs) {
+        var render, unwatch;
+        unwatch = null;
+        render = function() {
+          var IF;
+          IF = scope.renderIf;
+          if (IF) {
+            if (unwatch) {
+              unwatch();
+            }
+            return element.html($compile($.trim(html))(scope.$parent));
+          }
+        };
+        return unwatch = scope.$watch('renderIf', function() {
+          return render();
+        });
       };
-      unregister = $scope.$watch('ilIf', render);
-      return render();
     }
   };
 });
