@@ -51,7 +51,7 @@ module.exports = (grunt) ->
           middleware: (connect) ->
             [
               lrSnippet
-              mountFolder(connect, 'dist')
+              mountFolder(connect, '.temp')
               mountFolder(connect, yeomanConfig.app)
             ]
       test:
@@ -65,6 +65,7 @@ module.exports = (grunt) ->
         options:
           middleware: (connect) ->
             [
+              mountFolder(connect, '.temp')
               mountFolder(connect, 'dist')
             ]
     open:
@@ -184,7 +185,7 @@ module.exports = (grunt) ->
     ngtemplates:
       dist:
         options:
-          base: "#{yeomanConfig.app}/views"
+          base: "#{yeomanConfig.app}" # /views
           concat: "js"
           module: 'topicoContentEditors'
         src: "#{yeomanConfig.app}/views/{,**/}**.html",

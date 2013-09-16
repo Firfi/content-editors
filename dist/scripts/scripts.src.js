@@ -21,7 +21,7 @@ $.fn.getCursorPosition = function() {
 */
 angular.module("topicoContentEditors").run(["$templateCache", function($templateCache) {
 
-  $templateCache.put("editor/includeDialog.html",
+  $templateCache.put("views/editor/includeDialog.html",
     "<div class=\"modal hide fade\" tabindex=\"-1\" id=\"{{ modalId }}\">\n" +
     "    <div class=\"modal-header\">\n" +
     "        <a class=\"close\" data-dismiss=\"modal\">&times;</a>\n" +
@@ -56,9 +56,8 @@ angular.module("topicoContentEditors").run(["$templateCache", function($template
     "</div>"
   );
 
-  $templateCache.put("main.html",
+  $templateCache.put("views/main.html",
     "<div class=\"hero-unit\">\n" +
-    "    <topico-video-embed res=\"youtube\"></topico-video-embed>\n" +
     "    <textarea ng-model=\"descriptionMarkdown\"></textarea>\n" +
     "    <textarea ng-model=\"descriptionHtml\"></textarea>\n" +
     "    <topico-editor markdown=\"descriptionMarkdown\" html=\"descriptionHtml\"></topico-editor>\n" +
@@ -67,6 +66,11 @@ angular.module("topicoContentEditors").run(["$templateCache", function($template
 
 }]);
 
+
+
+/*
+//@ sourceMappingURL=main.js.map
+*/
 'use strict';
 angular.module('topicoContentEditors').directive('buttonToggle', function() {
   return {
@@ -97,190 +101,223 @@ angular.module('topicoContentEditors').directive('buttonToggle', function() {
 //@ sourceMappingURL=buttonToggle.js.map
 */
 'use strict';
+angular.module('topicoContentEditors').directive('ilLazy', function($compile) {
+  return {
+    scope: {
+      ilIf: '='
+    },
+    restrict: 'A',
+    link: function($scope, element, attr) {
+      var html, render, unregister;
+      console.warn('load lazy');
+      html = element.html();
+      render = function() {
+        var IF, c;
+        IF = $scope.ilIf;
+        if (IF) {
+          unregister();
+          c = $compile('<topico-editor markdown="descriptionMarkdown" html="descriptionHtml"></topico-editor>')($scope.$parent);
+          console.warn(c);
+          return element.append(c);
+        } else {
+          return element.html('');
+        }
+      };
+      unregister = $scope.$watch('ilIf', render);
+      return render();
+    }
+  };
+});
+
+/*
+//@ sourceMappingURL=lazy.js.map
+*/
+'use strict';
 angular.module('topicoContentEditors').directive('topicoEditor', [
-  'topicoCEEditorSvc', 'topicoResourcesSvc', '$compile', '$timeout', '$templateCache', '$filter', 'topicoResourcesService', 'topicoCETestResourceSvc', '$q', function(topicoCEEditorSvc, topicoResourcesSvc, $compile, $timeout, $templateCache, $filter, topicoResourcesService, topicoCETestResourceSvc, $q) {
+  'topicoCEEditorSvc', 'topicoResourcesSvc', '$compile', '$timeout', '$templateCache', '$filter', 'topicoResourcesService', 'topicoCETestResourceSvc', '$q', 'topicoPopupContentSvc', function(topicoCEEditorSvc, topicoResourcesSvc, $compile, $timeout, $templateCache, $filter, topicoResourcesService, topicoCETestResourceSvc, $q, topicoPopupContentSvc) {
     var nextId;
     nextId = 0;
     return {
-      template: '<div class="pagedown-bootstrap-editor">\n<div class="wmd-panel">\n  <div id="wmd-button-bar-{{ editorUniqueId }}"></div>\n  <textarea class="wmd-input" id="{{ editorAreaId }}"></textarea>\n  <div id="wmd-preview-{{ editorUniqueId }}" class="wmd-panel wmd-preview"></div>\n</div>\n<div ng-include=" \'editor/includeDialog.html\' "></div>\n<a id="{{ includeLinkId }}" style="display: none;" href="#{{ modalId }}"></a>\n</div>',
+      template: '<div class="pagedown-bootstrap-editor">\n<div class="wmd-panel">\n  <div id="wmd-button-bar-{{ editorUniqueId }}"></div>\n  <textarea class="wmd-input" id="{{ editorAreaId }}"></textarea>\n  <div id="wmd-preview-{{ editorUniqueId }}" class="wmd-panel wmd-preview"></div>\n</div>\n<div ng-include=" \'views/editor/includeDialog.html\' "></div>\n<a id="{{ includeLinkId }}" style="display: none;" href="#{{ modalId }}"></a>\n</div>',
       replace: true,
       restrict: 'E',
       scope: {
         markdown: '=',
         html: '='
       },
-      link: function(scope, element, attrs) {
-        var api, editor, serviceDefer, serviceSuccess;
-        scope.editorUniqueId = nextId++;
-        scope.includeLinkId = "wmd-include-link-" + scope.editorUniqueId;
-        scope.editorAreaId = "wmd-input-" + scope.editorUniqueId;
-        scope.modalId = "wmd-include-" + scope.editorUniqueId;
-        api = null;
-        editor = null;
-        serviceDefer = $q.defer();
-        scope.resources = [];
-        serviceSuccess = function(res) {
-          var getResources;
-          api = res;
-          scope.schemaOrType = function(o) {
-            return o.resSchemaName || o.type;
-          };
-          scope.types = _.map(_.chain($.extend(res.tasks, res.topics)).groupBy(scope.schemaOrType).value(), function(v, k) {
-            return {
-              name: k,
-              resources: v,
-              checked: false
+      compile: function(tElement, tAttrs, transclude) {
+        return function(scope, element, attrs) {
+          var api, editor, serviceDefer, serviceSuccess;
+          scope.editorUniqueId = nextId++;
+          scope.includeLinkId = "wmd-include-link-" + scope.editorUniqueId;
+          scope.editorAreaId = "wmd-input-" + scope.editorUniqueId;
+          scope.modalId = "wmd-include-" + scope.editorUniqueId;
+          api = null;
+          editor = null;
+          serviceDefer = $q.defer();
+          scope.resources = [];
+          serviceSuccess = function(res) {
+            var getResources;
+            api = res;
+            scope.schemaOrType = function(o) {
+              return o.resSchemaName || o.type;
             };
-          });
-          getResources = function() {
-            var r, _ref;
-            r = $.map(scope.types, function(type) {
-              return type.resources;
+            scope.types = _.map(_.chain($.extend(res.tasks, res.topics)).groupBy(scope.schemaOrType).value(), function(v, k) {
+              return {
+                name: k,
+                resources: v,
+                checked: false
+              };
             });
-            return (_ref = []).concat.apply(_ref, r);
-          };
-          scope.resources = getResources();
-          scope.filters = {
-            title: ''
-          };
-          scope.selectedTypes = function() {
-            var filtered;
-            filtered = _.select(scope.types, function(t) {
-              return t.checked === true;
-            });
-            return filtered = filtered.length > 0 ? filtered : scope.types;
-          };
-          scope.selectedResources = function() {
-            var r, _ref;
-            r = _.map(scope.selectedTypes(), function(type) {
-              if (scope.filters.title === '') {
+            getResources = function() {
+              var r, _ref;
+              r = $.map(scope.types, function(type) {
                 return type.resources;
-              } else {
-                return _.select(type.resources, function(res) {
-                  var _ref, _ref1;
-                  return ((_ref = res.title) != null ? (_ref1 = _ref.toLowerCase()) != null ? _ref1.indexOf(scope.filters.title.toLowerCase()) : void 0 : void 0) !== -1;
-                });
-              }
-            });
-            return (_ref = []).concat.apply(_ref, r);
-          };
-          $timeout(function() {
-            return editor.refreshPreview();
-          });
-          return serviceDefer.resolve();
-        };
-        topicoResourcesService.getTasks().then(serviceSuccess, function(err) {
-          scope.servicesError = "error in request to " + err.url + ":\n" + err.msg + ". Make sure that you can access " + err.url + " through browser.\nFor now you'll see mockup data.";
-          return serviceSuccess(topicoCETestResourceSvc);
-        });
-        return $timeout(function() {
-          var $wmdInput, converter, editorArea, help, isPreviewRefresh, modal, topic, watches;
-          editorArea = $('#' + scope.editorAreaId);
-          modal = $('#' + scope.modalId);
-          converter = new Markdown.Converter();
-          help = function() {
-            return alert("Topico markdown editor");
-          };
-          topic = {
-            "type": "Res",
-            "resSchemaName": "Topic",
-            "tag": "groovy",
-            "description": "Test topic 2",
-            "aboutTopicIds": [],
-            "aboutResIds": [],
-            "title": "Test topic 2",
-            "topics": [],
-            "nonTopicAbouts": [],
-            "statements": [
-              {
-                "predicate": "IS_ABOUT",
-                "objectId": "518d3cd70cf27f0e99132475"
-              }
-            ]
-          };
-          scope.includeCallback = function() {
-            scope.popupState = {
-              carret: editorArea.getCursorPosition(),
-              text: editorArea.val()
+              });
+              return (_ref = []).concat.apply(_ref, r);
             };
-            return modal.modal();
-          };
-          scope.includeResource = function(id) {
-            var cursor, end, newText, start, text;
-            cursor = scope.popupState.carret;
-            text = scope.popupState.text;
-            start = text.substring(0, cursor);
-            end = text.substring(cursor, text.length);
-            newText = "" + start + "{{include " + id + "}}" + end;
-            scope.popupState.text = newText;
-            editorArea.val(newText);
+            scope.resources = getResources();
+            scope.filters = {
+              title: ''
+            };
+            scope.selectedTypes = function() {
+              var filtered;
+              filtered = _.select(scope.types, function(t) {
+                return t.checked === true;
+              });
+              return filtered = filtered.length > 0 ? filtered : scope.types;
+            };
+            scope.selectedResources = function() {
+              var r, _ref;
+              r = _.map(scope.selectedTypes(), function(type) {
+                if (scope.filters.title === '') {
+                  return type.resources;
+                } else {
+                  return _.select(type.resources, function(res) {
+                    var _ref, _ref1;
+                    return ((_ref = res.title) != null ? (_ref1 = _ref.toLowerCase()) != null ? _ref1.indexOf(scope.filters.title.toLowerCase()) : void 0 : void 0) !== -1;
+                  });
+                }
+              });
+              return (_ref = []).concat.apply(_ref, r);
+            };
             $timeout(function() {
               return editor.refreshPreview();
             });
-            return modal.modal('hide');
+            return serviceDefer.resolve();
           };
-          editor = new Markdown.Editor(converter, "-" + scope.editorUniqueId, {
-            handler: help,
-            includeCallback: scope.includeCallback
-          }, {
-            buttonBar: element[0].firstElementChild.children[0],
-            input: element[0].firstElementChild.children[1],
-            preview: element[0].firstElementChild.children[2]
-          });
-          editor.run();
-          isPreviewRefresh = false;
-          watches = {};
-          converter.hooks.chain("preConversion", function(markdown) {
-            var newWatches, oldWatches, ow, resultMd, _i, _len;
-            scope.markdown = markdown;
-            newWatches = [];
-            resultMd = markdown.replace(/{{include (.+?)}}/g, function(str, p1) {
-              var r, wtc, _ref, _ref1;
-              p1 = p1.trim();
-              wtc = function() {
-                if (scope.$parent[p1]) {
-                  return scope.$parent.$watch(p1, function(o, n) {
-                    return $timeout(function() {
-                      return editor.refreshPreview();
-                    });
-                  });
-                }
-              };
-              if (wtc) {
-                if (!watches[p1]) {
-                  watches[p1] = wtc();
-                }
-                newWatches.push(p1);
-              }
-              return (_ref = (_ref1 = scope.$parent[p1]) != null ? _ref1 : (r = $filter('getById')(scope.resources, p1), (r != null ? r.text : void 0) || (r != null ? r.description : void 0))) != null ? _ref : p1;
-            });
-            oldWatches = jQuery.extend({}, watches);
-            delete oldWatches[newWatches];
-            for (_i = 0, _len = oldWatches.length; _i < _len; _i++) {
-              ow = oldWatches[_i];
-              ow();
-            }
-            return resultMd;
-          });
-          converter.hooks.chain("postConversion", function(html) {
-            return scope.html = html;
-          });
-          editor.hooks.chain("onPreviewRefresh", function() {
-            if (!isPreviewRefresh) {
-              return scope.$apply();
-            }
-          });
-          $wmdInput = $("#wmd-input-" + scope.editorUniqueId);
-          scope.$watch('markdown', function(value, oldValue) {
-            $wmdInput.val(value);
-            isPreviewRefresh = true;
-            editor.refreshPreview();
-            return isPreviewRefresh = false;
+          topicoPopupContentSvc.content().then(serviceSuccess, function(err) {
+            scope.servicesError = "error in request to " + err.url + ":\n" + err.msg + ". Make sure that you can access " + err.url + " through browser.\nFor now you'll see mockup data.";
+            return serviceSuccess(topicoCETestResourceSvc);
           });
           return $timeout(function() {
-            return editor.refreshPreview();
+            var $wmdInput, converter, editorArea, help, isPreviewRefresh, topic, watches;
+            editorArea = $('#' + scope.editorAreaId);
+            converter = new Markdown.Converter();
+            help = function() {
+              return alert("Topico markdown editor");
+            };
+            topic = {
+              "type": "Res",
+              "resSchemaName": "Topic",
+              "tag": "groovy",
+              "description": "Test topic 2",
+              "aboutTopicIds": [],
+              "aboutResIds": [],
+              "title": "Test topic 2",
+              "topics": [],
+              "nonTopicAbouts": [],
+              "statements": [
+                {
+                  "predicate": "IS_ABOUT",
+                  "objectId": "518d3cd70cf27f0e99132475"
+                }
+              ]
+            };
+            scope.includeCallback = function() {
+              scope.popupState = {
+                carret: editorArea.getCursorPosition(),
+                text: editorArea.val()
+              };
+              return $('#' + scope.modalId).modal();
+            };
+            scope.includeResource = function(id) {
+              var cursor, end, newText, start, text;
+              cursor = scope.popupState.carret;
+              text = scope.popupState.text;
+              start = text.substring(0, cursor);
+              end = text.substring(cursor, text.length);
+              newText = "" + start + "{{include " + id + "}}" + end;
+              scope.popupState.text = newText;
+              editorArea.val(newText);
+              $timeout(function() {
+                return editor.refreshPreview();
+              });
+              return modal.modal('hide');
+            };
+            editor = new Markdown.Editor(converter, "-" + scope.editorUniqueId, {
+              handler: help,
+              includeCallback: scope.includeCallback
+            }, {
+              buttonBar: element[0].firstElementChild.children[0],
+              input: element[0].firstElementChild.children[1],
+              preview: element[0].firstElementChild.children[2]
+            });
+            editor.run();
+            isPreviewRefresh = false;
+            watches = {};
+            converter.hooks.chain("preConversion", function(markdown) {
+              var newWatches, oldWatches, ow, resultMd, _i, _len;
+              scope.markdown = markdown;
+              newWatches = [];
+              resultMd = markdown.replace(/{{include (.+?)}}/g, function(str, p1) {
+                var r, wtc, _ref, _ref1;
+                p1 = p1.trim();
+                wtc = function() {
+                  if (scope.$parent[p1]) {
+                    return scope.$parent.$watch(p1, function(o, n) {
+                      return $timeout(function() {
+                        return editor.refreshPreview();
+                      });
+                    });
+                  }
+                };
+                if (wtc) {
+                  if (!watches[p1]) {
+                    watches[p1] = wtc();
+                  }
+                  newWatches.push(p1);
+                }
+                return (_ref = (_ref1 = scope.$parent[p1]) != null ? _ref1 : (r = $filter('getById')(scope.resources, p1), (r != null ? r.text : void 0) || (r != null ? r.description : void 0))) != null ? _ref : p1;
+              });
+              oldWatches = jQuery.extend({}, watches);
+              delete oldWatches[newWatches];
+              for (_i = 0, _len = oldWatches.length; _i < _len; _i++) {
+                ow = oldWatches[_i];
+                ow();
+              }
+              return resultMd;
+            });
+            converter.hooks.chain("postConversion", function(html) {
+              return scope.html = html;
+            });
+            editor.hooks.chain("onPreviewRefresh", function() {
+              if (!isPreviewRefresh) {
+                return scope.$apply();
+              }
+            });
+            $wmdInput = $("#wmd-input-" + scope.editorUniqueId);
+            scope.$watch('markdown', function(value, oldValue) {
+              $wmdInput.val(value);
+              isPreviewRefresh = true;
+              editor.refreshPreview();
+              return isPreviewRefresh = false;
+            });
+            return $timeout(function() {
+              return editor.refreshPreview();
+            });
           });
-        });
+        };
       }
     };
   }
@@ -439,6 +476,27 @@ angular.module('topicoContentEditors').service('topicoCEVideoSvc', [
 
 /*
 //@ sourceMappingURL=topicoCEVideoSvc.js.map
+*/
+'use strict';
+angular.module('topicoContentEditors').service('topicoPopupContentSvc', [
+  'topicoResourcesService', function(topicoResourcesService) {
+    var c, initContent;
+    c = null;
+    initContent = function() {
+      return c = topicoResourcesService.getTasks();
+    };
+    initContent();
+    return {
+      content: function() {
+        return c;
+      },
+      refresh: initContent()
+    };
+  }
+]);
+
+/*
+//@ sourceMappingURL=topicoPopupContentSvc.js.map
 */
 angular.module('topicoContentEditors').service('topicoResourcesSvc', function() {
   return {

@@ -1,6 +1,14 @@
 
 angular.module('topicoContentEditors', ['topicoAngularServiceApp']);
 
+#angular.module('topicoContentEditors').config ($routeProvider) ->
+#  $routeProvider.when('/', {
+#    templateUrl : 'views/main.html',
+#    controller : 'TopicoCEDevMainCtrl'
+#  }).otherwise({
+#    redirectTo : '/'
+#  })
+
 $.fn.getCursorPosition = ->
   input = jQuery(this).get(0)
   if document.selection

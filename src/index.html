@@ -29,13 +29,24 @@
     <![endif]-->
 
     <!-- Add your site or application content here -->
-    <div class="container" ng-view=""></div>
+    <div class="container" ng-view=''></div>
+    <div class="hero-unit">
+        <textarea ng-model="descriptionMarkdown"></textarea>
+        <textarea ng-model="descriptionHtml"></textarea>
+        <topico-editor markdown="descriptionMarkdown" html="descriptionHtml"></topico-editor>
+
+        <textarea ng-model="d1"></textarea>
+        <textarea ng-model="d2"></textarea>
+        <topico-editor markdown="d1" html="d2"></topico-editor>
+
+        <textarea ng-model="d3"></textarea>
+        <textarea ng-model="d4"></textarea>
+        <topico-editor markdown="d3" html="d4"></topico-editor>
+    </div>
+
 
     <script src="bower_components/jquery/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
-
-    <script data-main="scripts" src="require.js"></script>
-
 
     <!-- build:js scripts/plugins.js -->
         <script src="bower_components/bootstrap-sass/js/bootstrap-affix.js"></script>
@@ -57,20 +68,23 @@
         <script src="bower_components/pagedown-bootstrap/Markdown.Editor.js"></script>
         <script src="bower_components/pagedown-bootstrap/Markdown.Sanitizer.js"></script>
         <script src="bower_components/angular-topico-services/dist/scripts/scripts.js"></script>
-        <script src="test/testtest.js"></script>
         <script src="bower_components/underscore/underscore.js"></script>
         <!-- endbuild -->
 
 
 
         <!-- build:js({.temp,src}) scripts/scripts.js -->
-        <script src="scripts/app.js"></script>
-        <script src="scripts/controllers/main.js"></script>
-        <script src="scripts/directives/topicoVideoEmbed.js"></script>
+        <script src="scripts/init.js"></script>
         <script src="scripts/services/topicoCEVideoSvc.js"></script>
         <script src="scripts/services/topicoCESvc.js"></script>
         <script src="scripts/services/topicoCEEditorSvc.js"></script>
+        <script src="scripts/services/topicoResourcesSvc.js"></script>
+        <script src="scripts/services/topicoPopupContentSvc.js"></script>
         <script src="scripts/directives/topicoEditor.js"></script>
+        <script src="scripts/directives/topicoVideoEmbed.js"></script>
+        <script src="scripts/directives/buttonToggle.js"></script>
+        <script src="scripts/directives/lazy.js"></script>
+        <script src="scripts/filters/getById.js"></script>
         <!-- endbuild -->
 
 

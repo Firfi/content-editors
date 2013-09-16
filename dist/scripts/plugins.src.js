@@ -6662,10 +6662,6 @@ angular.module('topicoAngularServiceApp', []).config([
   function ($routeProvider, $httpProvider) {
     $httpProvider.defaults.useXDomain = true;
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
-    $routeProvider.when('/', {
-      templateUrl: 'views/main.html',
-      controller: 'MainCtrl'
-    }).otherwise({ redirectTo: '/' });
   }
 ]);
 'use strict';
@@ -7024,7 +7020,6 @@ angular.module('topicoAngularServiceApp').factory('topicoResourcesService', [
                 mainTopics.push(topics_data[i]);
               }
             }
-            console.log('not Finished');
             for (var i = 0; i < topics.length; i++) {
               for (var j = 0; j < topics[i].statements.length; j++) {
                 var topic = getTopic(topics[i].statements[j].objectId);
@@ -7142,9 +7137,7 @@ angular.module('topicoAngularServiceApp').factory('topicoResourcesService', [
 'use strict';
 angular.module('topicoAngularServiceApp').factory('topicoSpaceService', [
   '$http',
-  '$rootScope',
-  '$log',
-  function ($http, $rootScope, $log) {
+  function ($http) {
     return {
       list: function (callback) {
         $http({
@@ -7152,7 +7145,6 @@ angular.module('topicoAngularServiceApp').factory('topicoSpaceService', [
           url: 'http://198.61.168.204:8080/topicoGrails/rest/spaces',
           withCredentials: true
         }).success(function (res) {
-          console.log(res);
           callback(res);
         }).error(function (data, status) {
           console.log('Request failed: status=' + status + ', data=' + data);
