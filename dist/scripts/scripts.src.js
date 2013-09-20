@@ -256,7 +256,7 @@ angular.module('topicoContentEditors').directive('topicoEditor', [
               $timeout(function() {
                 return editor.refreshPreview();
               });
-              return modal.modal('hide');
+              return $('#' + scope.modalId).modal('hide');
             };
             editor = new Markdown.Editor(converter, "-" + scope.editorUniqueId, {
               handler: help,

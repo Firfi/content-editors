@@ -133,7 +133,7 @@ angular.module('topicoContentEditors')
               editorArea.val(newText)
               $timeout ->
                 editor.refreshPreview()
-              modal.modal('hide');
+              $('#'+scope.modalId).modal('hide');
 
             # elements[] is for correct unit tests
             editor = new Markdown.Editor(converter, "-"+scope.editorUniqueId, {
