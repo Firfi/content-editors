@@ -1,5 +1,5 @@
 
-angular.module('topicoContentEditors', ['topicoAngularServiceApp']);
+angular.module('topicoContentEditors', ['topicoAngularServiceApp', 'ui.bootstrap.modal']);
 
 #angular.module('topicoContentEditors').config ($routeProvider) ->
 #  $routeProvider.when('/', {

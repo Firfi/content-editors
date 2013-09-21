@@ -23,7 +23,6 @@ angular.module('topicoContentEditors')
                   <div id="wmd-preview-{{ editorUniqueId }}" class="wmd-panel wmd-preview"></div>
                 </div>
                 <div ng-include=" 'views/editor/includeDialog.html' "></div>
-                <a id="{{ includeLinkId }}" style="display: none;" href="#{{ modalId }}"></a>
                 </div>'''
       replace: true
       restrict: 'E'
@@ -114,14 +113,14 @@ angular.module('topicoContentEditors')
                 "objectId": "518d3cd70cf27f0e99132475"
               ]
             }
-
             scope.includeCallback = ->
              # api.saveTopic([],topic)
+              console.warn('include cb')
               scope.popupState =
                 # this sort of state refreshes every call to popup
                 carret: editorArea.getCursorPosition()
                 text: editorArea.val()
-              $('#'+scope.modalId).modal()
+              $('#'+scope.modalId).modal('show')
 
             scope.includeResource = (id) ->
               cursor = scope.popupState.carret
@@ -133,7 +132,7 @@ angular.module('topicoContentEditors')
               editorArea.val(newText)
               $timeout ->
                 editor.refreshPreview()
-              $('#'+scope.modalId).modal('hide');
+              $('#'+scope.modalId).modal('close')
 
             # elements[] is for correct unit tests
             editor = new Markdown.Editor(converter, "-"+scope.editorUniqueId, {
